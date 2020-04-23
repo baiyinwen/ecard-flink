@@ -1,10 +1,5 @@
 package com.ecard.bigdata.bean;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -14,10 +9,6 @@ import java.sql.Timestamp;
  * @Date 2019/9/20 11:41
  * @Version 1.0
  **/
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class DataAnalysisSignMin implements Serializable {
 
     private int id;
@@ -26,4 +17,43 @@ public class DataAnalysisSignMin implements Serializable {
     private Timestamp createTime;
     private String status;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Timestamp getCollectTime() {
+        return collectTime;
+    }
+
+    public void setCollectTime(Timestamp collectTime) {
+        this.collectTime = collectTime;
+    }
+
+    public Integer getTransferTimes() {
+        return transferTimes;
+    }
+
+    public void setTransferTimes(Integer transferTimes) {
+        this.transferTimes = transferTimes;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
