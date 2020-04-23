@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<!--status="WARN" :用于设置log4j2自身内部日志的信息输出级别，默认是OFF-->
+<!--monitorInterval="30"  :间隔秒数,自动检测配置文件的变更和重新配置本身-->
+<configuration status="OFF" monitorInterval="30">
+    <Properties>
+        <!--自定义一些常量，之后使用${变量名}引用-->
+        <!--<Property name="logFilePath">./ecard-flink-logs</Property>-->
+    </Properties>
+    <!--appenders:定义输出内容,输出格式,输出方式,日志保存策略等,常用其下三种标签[Console,File,RollingFile]-->
+    <appenders>
+        <!--console :控制台输出的配置-->
+        <console name="Console" target="SYSTEM_OUT">
+            <!--PatternLayout :输出日志的格式,LOG4J2定义了输出代码,详见第二部分-->
+            <PatternLayout pattern="[%d{yyy-MM-dd HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
+        </console>
+        <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按日期建立的文件夹下面并进行压缩，作为存档-->
+        <!--<RollingFile name="RollingFileInfo" fileName="${logFilePath}/info.log"
+                     filePattern="${logFilePath}/$${date:yyyy-MM-dd}/%d{yyyy-MM-dd}.info.log.%i">
+            &lt;!&ndash;ThresholdFilter :日志输出过滤&ndash;&gt;
+            &lt;!&ndash;level="info" :日志级别,onMatch="ACCEPT" :级别在info之上则接受,onMismatch="DENY" :级别在info之下则拒绝&ndash;&gt;
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="[%d{yyy-MM-dd HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
+            &lt;!&ndash; Policies :日志滚动策略&ndash;&gt;
+            <Policies>
+                &lt;!&ndash; TimeBasedTriggeringPolicy :时间滚动策略,默认0点小时产生新的文件,interval="6" : 自定义文件滚动时间间隔,每隔6小时产生新文件, modulate="true" : 产生文件是否以0点偏移时间,即6点,12点,18点,0点&ndash;&gt;
+                <TimeBasedTriggeringPolicy interval="6" modulate="true"/>
+                &lt;!&ndash; SizeBasedTriggeringPolicy :文件大小滚动策略&ndash;&gt;
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            &lt;!&ndash; DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了40 &ndash;&gt;
+            <DefaultRolloverStrategy max="40"/>
+        </RollingFile>-->
+        <!--<RollingFile name="RollingFileWarn" fileName="${logFilePath}/warn.log"
+                     filePattern="${logFilePath}/$${date:yyyy-MM-dd}/%d{yyyy-MM-dd}.warn.log.%i">
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="[%d{yyy-MM-dd HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingFile>-->
+        <!--<RollingFile name="RollingFileError" fileName="${logFilePath}/error.log"
+                     filePattern="${logFilePath}/$${date:yyyy-MM-dd}/%d{yyyy-MM-dd}.error.log.%i">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="[%d{yyy-MM-dd HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingFile>-->
+    </appenders>
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
+    <loggers>
+        <!--过滤掉spring和kafka的日志信息-->
+        <!--Logger节点用来单独指定日志的形式，name为包路径,比如要为org.springframework包下所有日志指定为INFO级别等。 -->
+        <logger name="org.springframework" level="OFF"></logger>
+        <logger name="org.apache.kafka" level="OFF"></logger>
+        <!-- Root节点用来指定项目的根日志，如果没有单独指定Logger，那么就会默认使用该Root日志输出 -->
+        <root level="INFO">
+            <appender-ref ref="Console"/>
+            <!--<appender-ref ref="RollingFileInfo"/>
+            <appender-ref ref="RollingFileWarn"/>
+            <appender-ref ref="RollingFileError"/>-->
+        </root>
+    </loggers>
+</configuration>
