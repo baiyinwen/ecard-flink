@@ -8,8 +8,6 @@ package com.ecard.bigdata.constants;
  **/
 public class CONFIGS {
 
-    public static final String PROPERTIES_FILE_NAME = "config.properties";
-
     public static final String KAFKA_BROKERS = "kafka.brokers";
     public static final String ZOOKEEPER_BROKERS = "zookeeper.brokers";
 

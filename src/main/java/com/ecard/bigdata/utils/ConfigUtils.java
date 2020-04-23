@@ -1,6 +1,7 @@
 package com.ecard.bigdata.utils;
 
 import com.ecard.bigdata.constants.CONFIGS;
+import com.ecard.bigdata.constants.CONSTANTS;
 import org.apache.flink.api.java.utils.ParameterTool;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class ConfigUtils {
     public static ParameterTool createParameterTool() {
         try {
             return ParameterTool
-                    .fromPropertiesFile(ExecutionEnvUtils.class.getClassLoader().getResourceAsStream(CONFIGS.PROPERTIES_FILE_NAME))
+                    .fromPropertiesFile(ExecutionEnvUtils.class.getClassLoader().getResourceAsStream(CONSTANTS.ECARD_FLINK_CONFIG_FILE))
                     .mergeWith(ParameterTool.fromSystemProperties());
         } catch (IOException e) {
             e.printStackTrace();
