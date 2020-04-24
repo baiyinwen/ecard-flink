@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @Date 2019/9/19 15:28
  * @Version 1.0
  **/
-public class JsonLogInfo<I, O> implements Serializable {
+public class JsonLog<I, O> implements Serializable {
 
     private String channelNo;
     private String costTime;
@@ -81,5 +81,19 @@ public class JsonLogInfo<I, O> implements Serializable {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    @Override
+    public String toString() {
+        return "JsonLog{" +
+                "channelNo='" + channelNo + '\'' +
+                ", costTime='" + costTime + '\'' +
+                ", event='" + event + '\'' +
+                ", input=" + input +
+                ", output=" + output +
+                ", time='" + time + '\'' +
+                ", type='" + type + '\'' +
+                ", version='" + version + '\'' +
+                '}';
     }
 }

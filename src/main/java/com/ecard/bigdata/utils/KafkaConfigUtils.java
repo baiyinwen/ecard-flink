@@ -1,8 +1,8 @@
 package com.ecard.bigdata.utils;
 
-import com.ecard.bigdata.model.JsonLogInfo;
+import com.ecard.bigdata.model.JsonLog;
 import com.ecard.bigdata.constants.CONFIGS;
-import com.ecard.bigdata.schemas.KafkaRecordSchema;
+import com.ecard.bigdata.schemas.JsonLogSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -45,7 +45,7 @@ public class KafkaConfigUtils {
     }
 
 
-    public static DataStreamSource<JsonLogInfo> createSource(StreamExecutionEnvironment env) {
+    public static DataStreamSource<JsonLog> createSource(StreamExecutionEnvironment env) {
         ParameterTool parameter = (ParameterTool) env.getConfig().getGlobalJobParameters();
         String topic = parameter.getRequired(CONFIGS.KAFKA_TOPIC);
         Long time = parameter.getLong(CONFIGS.CONSUMER_FROM_TIME, 0L);
@@ -59,10 +59,10 @@ public class KafkaConfigUtils {
      * @return
      * @throws IllegalAccessException
      */
-    public static DataStreamSource<JsonLogInfo> createSource(StreamExecutionEnvironment env, String topic, Long time) {
+    public static DataStreamSource<JsonLog> createSource(StreamExecutionEnvironment env, String topic, Long time) {
         ParameterTool parameterTool = (ParameterTool) env.getConfig().getGlobalJobParameters();
         Properties props = createKafkaProps(parameterTool);
-        FlinkKafkaConsumer010<JsonLogInfo> consumer = new FlinkKafkaConsumer010<>(topic, new KafkaRecordSchema(), props);
+        FlinkKafkaConsumer010<JsonLog> consumer = new FlinkKafkaConsumer010<>(topic, new JsonLogSchema(), props);
         //重置offset到time时刻
         if (time != 0L) {
             Map<KafkaTopicPartition, Long> partitionOffset = createOffsetByTime(props, parameterTool, time);

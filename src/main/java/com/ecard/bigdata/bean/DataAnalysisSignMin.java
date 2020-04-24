@@ -56,4 +56,15 @@ public class DataAnalysisSignMin implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "DataAnalysisSignMin{" +
+                "id=" + id +
+                ", collectTime=" + collectTime +
+                ", transferTimes=" + transferTimes +
+                ", createTime=" + createTime +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }
