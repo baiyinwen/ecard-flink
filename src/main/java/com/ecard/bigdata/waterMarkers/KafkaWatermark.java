@@ -32,7 +32,6 @@ public class KafkaWatermark implements AssignerWithPeriodicWatermarks<DataAnalys
     @Override
     public Watermark getCurrentWatermark() {
         return new Watermark(currentTimestamp - maxOutOfOrder);
-
     }
 
 }

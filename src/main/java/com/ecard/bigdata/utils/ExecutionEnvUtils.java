@@ -30,7 +30,7 @@ public class ExecutionEnvUtils {
         //}
         env.getConfig().setGlobalJobParameters(parameterTool);
         //设置流的时间(IngestionTime:数据进入流的时间，ProcessingTime:处理数据的时间，EventTime:数据自带的时间戳)
-        //env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         return env;
     }
 
