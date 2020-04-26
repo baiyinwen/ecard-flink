@@ -17,4 +17,11 @@ public class CONSTANTS {
     public final static String TIME_FORMAT_1 = "HH:mm:ss";
     public final static String TIME_FORMAT_2 = "HHmmss";
 
+    public final static int NUMBER_0 = 0;
+    public final static int NUMBER_1 = 1;
+
+    public final static String EVENT_MSG_CODE_KEY = "msgCode";
+    public final static String EVENT_MSG_CODE_VALUE = "000000";
+    public final static String EVENT_ESSC_LOG_SIGN = "essc_log_sign";
+
 }

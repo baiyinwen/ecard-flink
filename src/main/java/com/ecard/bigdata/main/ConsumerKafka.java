@@ -63,22 +63,24 @@ public class ConsumerKafka {
             String event = jsonLog.getEvent();
             JSONObject outputJson = JSON.parseObject(jsonLog.getOutput().toString());
             dataAnalysisSignMin.setCollectTime(DateTimeUtils.toTimestamp(jsonLog.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
-            if ("essc_log_sign".equals(event) && "000000".equals(outputJson.getString("msgCode"))) {
-                dataAnalysisSignMin.setTransferTimes(1);
+            if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
+                    && CONSTANTS.EVENT_MSG_CODE_KEY.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_VALUE))) {
+                dataAnalysisSignMin.setTransferTimes(CONSTANTS.NUMBER_1);
             } else {
-                dataAnalysisSignMin.setTransferTimes(0);
+                dataAnalysisSignMin.setTransferTimes(CONSTANTS.NUMBER_0);
             }
             return dataAnalysisSignMin;
         });
 
         DataStream<DataAnalysisSignMin> reduceRes = mapRes.assignTimestampsAndWatermarks(new KafkaWatermark())
-            .timeWindowAll(Time.seconds(60), Time.seconds(60))
-            .reduce((ReduceFunction<DataAnalysisSignMin>) (d1, d2) -> {
-                DataAnalysisSignMin dataAnalysisSignMin = new DataAnalysisSignMin();
-                dataAnalysisSignMin.setCollectTime(d1.getCollectTime());
-                dataAnalysisSignMin.setTransferTimes(d1.getTransferTimes() + d2.getTransferTimes());
-                return dataAnalysisSignMin;
-            });
+                .timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.TUMBLING_WINDOW_SIZE)))
+                .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.MAX_ALLOWED_LATENESS)))
+                .reduce((ReduceFunction<DataAnalysisSignMin>) (d1, d2) -> {
+                    DataAnalysisSignMin dataAnalysisSignMin = new DataAnalysisSignMin();
+                    dataAnalysisSignMin.setCollectTime(d1.getCollectTime());
+                    dataAnalysisSignMin.setTransferTimes(d1.getTransferTimes() + d2.getTransferTimes());
+                    return dataAnalysisSignMin;
+                });
 
         reduceRes.addSink(new JsonLogSink());
 
