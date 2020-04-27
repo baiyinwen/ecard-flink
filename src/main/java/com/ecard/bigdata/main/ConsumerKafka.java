@@ -8,6 +8,7 @@ import com.ecard.bigdata.constants.CONSTANTS;
 import com.ecard.bigdata.model.JsonLog;
 import com.ecard.bigdata.schemas.JsonLogSchema;
 import com.ecard.bigdata.sink.JsonLogSink;
+import com.ecard.bigdata.source.SocketSourceDataTest;
 import com.ecard.bigdata.utils.ConfigUtils;
 import com.ecard.bigdata.utils.DateTimeUtils;
 import com.ecard.bigdata.utils.ExecutionEnvUtils;
@@ -57,20 +58,21 @@ public class ConsumerKafka {
         FlinkKafkaConsumer010<JsonLog> consumer = new FlinkKafkaConsumer010<>(topics, kafkaRecordSchema, props);
         //consumer.setStartFromLatest();//设置从最新位置开始消费
         DataStreamSource<JsonLog> data = env.addSource(consumer);
-
+        data.print();
         DataStream<DataAnalysisSignMin> mapRes = data.map((MapFunction<JsonLog, DataAnalysisSignMin>) jsonLog -> {
             DataAnalysisSignMin dataAnalysisSignMin = new DataAnalysisSignMin();
             String event = jsonLog.getEvent();
             JSONObject outputJson = JSON.parseObject(jsonLog.getOutput().toString());
             dataAnalysisSignMin.setCollectTime(DateTimeUtils.toTimestamp(jsonLog.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
             if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
-                    && CONSTANTS.EVENT_MSG_CODE_KEY.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_VALUE))) {
+                    && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
                 dataAnalysisSignMin.setTransferTimes(CONSTANTS.NUMBER_1);
             } else {
                 dataAnalysisSignMin.setTransferTimes(CONSTANTS.NUMBER_0);
             }
+            logger.info("map --- " + dataAnalysisSignMin.toString());
             return dataAnalysisSignMin;
-        });
+        }).setParallelism(1);
 
         DataStream<DataAnalysisSignMin> reduceRes = mapRes.assignTimestampsAndWatermarks(new KafkaWatermark())
                 .timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.TUMBLING_WINDOW_SIZE)))
@@ -79,6 +81,7 @@ public class ConsumerKafka {
                     DataAnalysisSignMin dataAnalysisSignMin = new DataAnalysisSignMin();
                     dataAnalysisSignMin.setCollectTime(d1.getCollectTime());
                     dataAnalysisSignMin.setTransferTimes(d1.getTransferTimes() + d2.getTransferTimes());
+                    logger.info("reduce --- " + dataAnalysisSignMin.toString());
                     return dataAnalysisSignMin;
                 });
 

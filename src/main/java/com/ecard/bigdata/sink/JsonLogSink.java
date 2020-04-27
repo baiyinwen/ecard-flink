@@ -31,6 +31,7 @@ public class JsonLogSink extends RichSinkFunction<DataAnalysisSignMin> {
     @Override
     public void invoke(DataAnalysisSignMin dataAnalysisSignMin, Context context) {
 
+        dataAnalysisSignMin.setStatus("1");
         logger.info("保存数据---" + dataAnalysisSignMin.toString());
     }
 
