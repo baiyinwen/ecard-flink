@@ -23,9 +23,9 @@ public class ExecutionEnvUtils {
         env.getConfig().setRestartStrategy(RestartStrategies.fixedDelayRestart(
                 parameterTool.getInt(CONFIGS.RESTART_ATTEMPTS), parameterTool.getInt(CONFIGS.DELAY_BETWEEN_ATTEMPTS)));
         //设置checkpoint
-        //if (parameterTool.getBoolean(CONFIGS.STREAM_CHECKPOINT_ENABLE, true)) {
-            //env.enableCheckpointing(parameterTool.getInt(CONFIGS.STREAM_CHECKPOINT_INTERVAL));
-        //}
+        if (parameterTool.getBoolean(CONFIGS.STREAM_CHECKPOINT_ENABLE)) {
+            env.enableCheckpointing(parameterTool.getInt(CONFIGS.STREAM_CHECKPOINT_INTERVAL));
+        }
         env.getConfig().setGlobalJobParameters(parameterTool);
         //设置流的时间(IngestionTime:数据进入流的时间，ProcessingTime:处理数据的时间，EventTime:数据自带的时间戳)
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
