@@ -1,10 +1,15 @@
 package com.ecard.bigdata.sink;
 
 import com.ecard.bigdata.bean.DataAnalysisSignMin;
+import com.ecard.bigdata.constants.CONSTANTS;
+import com.ecard.bigdata.utils.DateTimeUtils;
+import com.ecard.bigdata.utils.TBaseUtils;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Timestamp;
 
 /**
  * @Description
@@ -16,8 +21,11 @@ public class JsonLogSink extends RichSinkFunction<DataAnalysisSignMin> {
 
     private static Logger logger = LoggerFactory.getLogger(JsonLogSink.class);
 
+    private TBaseUtils tBaseUtils;
+
     @Override
     public void open(Configuration parameters) throws Exception {
+        tBaseUtils = TBaseUtils.getInstance();
         logger.info("调用open---");
         super.open(parameters);
     }
@@ -31,8 +39,14 @@ public class JsonLogSink extends RichSinkFunction<DataAnalysisSignMin> {
     @Override
     public void invoke(DataAnalysisSignMin dataAnalysisSignMin, Context context) {
 
+        logger.info("保存数据 -- " + dataAnalysisSignMin.toString());
         dataAnalysisSignMin.setStatus("1");
-        logger.info("保存数据---" + dataAnalysisSignMin.toString());
+        String sql = "INSERT INTO data_analysis_sign_min(COLLECT_TIME, TRANSFER_TIMES, CREATE_TIME, STATUS)" +
+                " VALUES(?, ?, ?, 1)";
+        Object[] params = new Object[]{dataAnalysisSignMin.getCollectTime(),
+                dataAnalysisSignMin.getTransferTimes(),
+                Timestamp.valueOf(DateTimeUtils.customDateTime(0, CONSTANTS.DATE_TIME_FORMAT_1))};
+        tBaseUtils.executeUpdate(sql, params);
     }
 
 }

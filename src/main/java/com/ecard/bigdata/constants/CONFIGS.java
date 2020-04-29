@@ -9,11 +9,19 @@ package com.ecard.bigdata.constants;
 public class CONFIGS {
 
     public static final String KAFKA_BROKERS = "kafka.brokers";
-    public static final String ZOOKEEPER_BROKERS = "zookeeper.brokers";
+    public static final String ZOOKEEPER_SERVERS = "zookeeper.servers";
+
+    public static final String TBASE_JDBC_DATASOURCE_SIZE = "tbase.jdbc.datasource.size";
+    public static final String TBASE_JDBC_URL = "tbase.jdbc.url";
+    public static final String TBASE_JDBC_USER = "tbase.jdbc.user";
+    public static final String TBASE_JDBC_PASSWORD = "tbase.jdbc.password";
 
     public static final String RESTART_ATTEMPTS = "restart.attempts";
     public static final String DELAY_BETWEEN_ATTEMPTS = "delay.between.attempts";
     public static final String STREAM_PARALLELISM = "stream.parallelism";
+
+    public static final String SASL_TBDS_SECURE_ID = "sasl.tbds.secure.id";
+    public static final String SASL_TBDS_SECURE_KEY = "sasl.tbds.secure.key";
 
     public static final String CONSUMER_FROM_TIME = "consumer.from.time";
     public static final String STREAM_CHECKPOINT_ENABLE = "stream.checkpoint.enable";

@@ -26,7 +26,6 @@ public class JsonLogSchema implements DeserializationSchema<JsonLog>, Serializat
     public JsonLog deserialize(byte[] bytes) {
 
         JsonLog jsonLog = gson.fromJson(new String(bytes), JsonLog.class);
-        //logger.info(new String(bytes));
         return jsonLog;
     }
 
@@ -44,6 +43,7 @@ public class JsonLogSchema implements DeserializationSchema<JsonLog>, Serializat
 
     @Override
     public byte[] serialize(JsonLog jsonLog) {
+
         return gson.toJson(jsonLog).getBytes(Charset.forName("UTF-8"));
     }
 }

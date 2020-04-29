@@ -12,6 +12,8 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.OffsetAndTimestamp;
 import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,8 @@ import java.util.Properties;
  **/
 public class KafkaConfigUtils {
 
+    private static Logger logger = LoggerFactory.getLogger(KafkaConfigUtils.class);
+
     /**
      * 设置 kafka 配置
      *
@@ -35,12 +39,20 @@ public class KafkaConfigUtils {
     public static Properties createKafkaProps(ParameterTool parameterTool) {
 
         Properties props = parameterTool.getProperties();
+
+        props.put("zookeeper.connect", parameterTool.get(CONFIGS.ZOOKEEPER_SERVERS));
         props.put("bootstrap.servers", parameterTool.get(CONFIGS.KAFKA_BROKERS));
-        props.put("zookeeper.connect", parameterTool.get(CONFIGS.ZOOKEEPER_BROKERS));
-        props.put("group.id", parameterTool.get(CONFIGS.KAFKA_TOPIC) + "_group1");
+
+        props.put("group.id", parameterTool.get(CONFIGS.KAFKA_TOPIC) + "_group_1");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("auto.offset.reset", "earliest");
+
+        props.put("security.protocol", "SASL_TBDS");
+        props.put("sasl.mechanism", "TBDS");
+        props.put("sasl.tbds.secure.id", parameterTool.get(CONFIGS.SASL_TBDS_SECURE_ID));
+        props.put("sasl.tbds.secure.key", parameterTool.get(CONFIGS.SASL_TBDS_SECURE_KEY));
+
         return props;
     }
 

@@ -3,7 +3,8 @@ package com.ecard.bigdata.waterMarkers;
 import com.ecard.bigdata.bean.DataAnalysisSignMin;
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
-import com.ecard.bigdata.utils.ConfigUtils;
+import com.ecard.bigdata.utils.ConfigUtil;
+import com.ecard.bigdata.utils.ParameterUtils;
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
 import org.apache.flink.streaming.api.watermark.Watermark;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class KafkaWatermark implements AssignerWithPeriodicWatermarks<DataAnalys
 
     private static Logger logger = LoggerFactory.getLogger(KafkaWatermark.class);
 
-    private final long maxOutOfOrder  = ConfigUtils.CONFIG_PARAMETERS.getLong(CONFIGS.MAX_OUT_OF_ORDER);
+    private final long maxOutOfOrder  = ConfigUtil.getLong(CONFIGS.MAX_OUT_OF_ORDER);
     private long currentTimestamp = CONSTANTS.NUMBER_0;
 
     @Override

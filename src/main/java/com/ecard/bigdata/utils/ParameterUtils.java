@@ -1,6 +1,5 @@
 package com.ecard.bigdata.utils;
 
-import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
 import org.apache.flink.api.java.utils.ParameterTool;
 
@@ -12,17 +11,9 @@ import java.io.IOException;
  * @Date 2020/4/13 10:16
  * @Version 1.0
  **/
-public class ConfigUtils {
+public class ParameterUtils {
 
     public static final ParameterTool CONFIG_PARAMETERS = createParameterTool();
-
-    public static ParameterTool createParameterTool(final String[] args) throws Exception {
-
-        if (args.length > 0) {
-            CONFIG_PARAMETERS.mergeWith(ParameterTool.fromArgs(args));
-        }
-        return CONFIG_PARAMETERS;
-    }
 
     public static ParameterTool createParameterTool() {
         try {
