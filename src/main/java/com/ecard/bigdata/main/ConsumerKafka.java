@@ -13,6 +13,7 @@ import com.ecard.bigdata.utils.ExecutionEnvUtils;
 import com.ecard.bigdata.utils.KafkaConfigUtils;
 import com.ecard.bigdata.utils.ParameterUtils;
 import com.ecard.bigdata.waterMarkers.KafkaWatermark;
+import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.common.typeinfo.TypeHint;
@@ -58,18 +59,17 @@ public class ConsumerKafka {
         consumer.setStartFromLatest();//设置从最新位置开始消费
         DataStreamSource<JsonLog> data = env.addSource(consumer);
 
-        DataStream<DataAnalysisSignMin> mapRes = data.map((MapFunction<JsonLog, DataAnalysisSignMin>) jsonLog -> {
-            DataAnalysisSignMin dataAnalysisSignMin = new DataAnalysisSignMin();
+        DataStream<DataAnalysisSignMin> mapRes = data.filter((FilterFunction<JsonLog>) jsonLog -> {
             String event = jsonLog.getEvent();
             JSONObject outputJson = JSON.parseObject(jsonLog.getOutput().toString());
-            dataAnalysisSignMin.setCollectTime(DateTimeUtils.toTimestamp(jsonLog.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
             if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
                     && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
-                dataAnalysisSignMin.setTransferTimes(CONSTANTS.NUMBER_1);
-                logger.info(jsonLog.toString());
-            } else {
-                dataAnalysisSignMin.setTransferTimes(CONSTANTS.NUMBER_0);
+                return true;
             }
+            return false;
+        }).map((MapFunction<JsonLog, DataAnalysisSignMin>) jsonLog -> {
+            DataAnalysisSignMin dataAnalysisSignMin = new DataAnalysisSignMin();
+            dataAnalysisSignMin.setCollectTime(DateTimeUtils.toTimestamp(jsonLog.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
             dataAnalysisSignMin.setTransferTimes(CONSTANTS.NUMBER_1);
             return dataAnalysisSignMin;
         }).returns(TypeInformation.of(new TypeHint<DataAnalysisSignMin>() {})).setParallelism(1);
