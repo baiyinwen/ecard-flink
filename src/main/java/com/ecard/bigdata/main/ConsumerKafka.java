@@ -66,6 +66,7 @@ public class ConsumerKafka {
             if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
                     && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
                 dataAnalysisSignMin.setTransferTimes(CONSTANTS.NUMBER_1);
+                logger.info(jsonLog.toString());
             } else {
                 dataAnalysisSignMin.setTransferTimes(CONSTANTS.NUMBER_0);
             }
