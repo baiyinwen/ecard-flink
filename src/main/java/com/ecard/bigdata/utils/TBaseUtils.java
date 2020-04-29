@@ -70,41 +70,6 @@ public class TBaseUtils {
         return dataSource.poll();
     }
 
-    public int executeUpdate(String sql, Object[] params) {
-        int rtn = 0;
-        Connection conn = null;
-        PreparedStatement pst = null;
-        try {
-            conn = getConnection();
-            conn.setAutoCommit(false);
-            pst = conn.prepareStatement(sql);
-            if(params != null && params.length > 0) {
-                if (paramsEnough(sql, params)) {
-                    for(int i = 0; i < params.length; i++) {
-                        pst.setObject(i + 1, params[i]);
-                    }
-                }
-            }
-            rtn = pst.executeUpdate();
-            conn.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (pst != null) {
-                try {
-                    pst.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            if(conn != null) {
-                dataSource.push(conn);
-            }
-        }
-        logger.info("executeUpdate --- " + sql + "; result --- " + rtn);
-        return rtn;
-    }
-
     public void executeQuery(String sql, Object[] params, QueryCallback callback) {
         Connection conn = null;
         PreparedStatement pst = null;
@@ -143,6 +108,41 @@ public class TBaseUtils {
             }
         }
         logger.info("executeQuery --- " + sql);
+    }
+
+    public int executeUpdate(String sql, Object[] params) {
+        int rtn = 0;
+        Connection conn = null;
+        PreparedStatement pst = null;
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+            pst = conn.prepareStatement(sql);
+            if(params != null && params.length > 0) {
+                if (paramsEnough(sql, params)) {
+                    for(int i = 0; i < params.length; i++) {
+                        pst.setObject(i + 1, params[i]);
+                    }
+                }
+            }
+            rtn = pst.executeUpdate();
+            conn.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (pst != null) {
+                try {
+                    pst.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(conn != null) {
+                dataSource.push(conn);
+            }
+        }
+        logger.info("executeUpdate --- " + sql + "; result --- " + rtn);
+        return rtn;
     }
 
     public int[] executeBatch(String sql, List<Object[]> paramsList) {

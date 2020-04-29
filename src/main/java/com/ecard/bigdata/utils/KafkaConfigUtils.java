@@ -48,10 +48,12 @@ public class KafkaConfigUtils {
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("auto.offset.reset", "earliest");
 
-        props.put("security.protocol", "SASL_TBDS");
-        props.put("sasl.mechanism", "TBDS");
-        props.put("sasl.tbds.secure.id", parameterTool.get(CONFIGS.SASL_TBDS_SECURE_ID));
-        props.put("sasl.tbds.secure.key", parameterTool.get(CONFIGS.SASL_TBDS_SECURE_KEY));
+        if (parameterTool.getBoolean(CONFIGS.KAFKA_SASL_ENABLE)) {
+            props.put("security.protocol", "SASL_TBDS");
+            props.put("sasl.mechanism", "TBDS");
+            props.put("sasl.tbds.secure.id", parameterTool.get(CONFIGS.SASL_TBDS_SECURE_ID));
+            props.put("sasl.tbds.secure.key", parameterTool.get(CONFIGS.SASL_TBDS_SECURE_KEY));
+        }
 
         return props;
     }

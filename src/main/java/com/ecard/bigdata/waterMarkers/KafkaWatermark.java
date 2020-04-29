@@ -27,6 +27,7 @@ public class KafkaWatermark implements AssignerWithPeriodicWatermarks<DataAnalys
 
     @Override
     public long extractTimestamp(DataAnalysisSignMin dataAnalysisSignMin, long previousElementTimestamp) {
+
         long time = dataAnalysisSignMin.getCollectTime().getTime();
         currentTimestamp = Math.max(time, currentTimestamp);
         return time;
@@ -35,6 +36,7 @@ public class KafkaWatermark implements AssignerWithPeriodicWatermarks<DataAnalys
     @Nullable
     @Override
     public Watermark getCurrentWatermark() {
+
         return new Watermark(currentTimestamp - maxOutOfOrder);
     }
 

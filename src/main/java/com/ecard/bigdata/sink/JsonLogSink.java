@@ -26,20 +26,20 @@ public class JsonLogSink extends RichSinkFunction<DataAnalysisSignMin> {
     @Override
     public void open(Configuration parameters) throws Exception {
         tBaseUtils = TBaseUtils.getInstance();
-        logger.info("调用open---");
+        logger.info("调用open --- ");
         super.open(parameters);
     }
 
     @Override
     public void close() throws Exception {
-        logger.info("调用close---");
+        logger.info("调用close --- ");
         super.close();
     }
 
     @Override
     public void invoke(DataAnalysisSignMin dataAnalysisSignMin, Context context) {
 
-        logger.info("保存数据 -- " + dataAnalysisSignMin.toString());
+        logger.info("保存数据到TBase -- " + dataAnalysisSignMin.toString());
         dataAnalysisSignMin.setStatus("1");
         String sql = "INSERT INTO data_analysis_sign_min(COLLECT_TIME, TRANSFER_TIMES, CREATE_TIME, STATUS)" +
                 " VALUES(?, ?, ?, 1)";

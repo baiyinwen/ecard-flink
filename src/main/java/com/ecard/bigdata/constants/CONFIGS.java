@@ -16,6 +16,8 @@ public class CONFIGS {
     public static final String TBASE_JDBC_USER = "tbase.jdbc.user";
     public static final String TBASE_JDBC_PASSWORD = "tbase.jdbc.password";
 
+    public static final String KAFKA_SASL_ENABLE = "kafka.sasl.enable";
+
     public static final String RESTART_ATTEMPTS = "restart.attempts";
     public static final String DELAY_BETWEEN_ATTEMPTS = "delay.between.attempts";
     public static final String STREAM_PARALLELISM = "stream.parallelism";
