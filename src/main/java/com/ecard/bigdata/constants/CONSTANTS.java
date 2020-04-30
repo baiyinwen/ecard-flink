@@ -8,9 +8,9 @@ package com.ecard.bigdata.constants;
  **/
 public class CONSTANTS {
 
-    public static final String ECARD_FLINK_CONFIG_FILE = "ecard-flink.properties";
+    public final static String ECARD_FLINK_CONFIG_FILE = "ecard-flink.properties";
 
-    public static final String TBASE_JDBC_DRIVER = "org.postgresql.Driver";
+    public final static String TBASE_JDBC_DRIVER = "org.postgresql.Driver";
 
     public final static String DATE_TIME_FORMAT_1 = "yyyy-MM-dd HH:mm:ss";
     public final static String DATE_TIME_FORMAT_2 = "yyyyMMddHHmmss";
