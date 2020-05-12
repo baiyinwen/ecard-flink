@@ -1,5 +1,7 @@
 package com.ecard.bigdata.utils;
 
+import com.ecard.bigdata.constants.CONFIGS;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -90,6 +92,16 @@ public class DateTimeUtils {
 
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		return sdf.format(timestamp);
+	}
+
+	public static Timestamp getIntervalBasicTime(Timestamp eventTime){
+
+		long interval = ConfigUtil.getLong(CONFIGS.TUMBLING_WINDOW_SIZE) * 1000;
+		long basicDateTime = eventTime.getTime();
+		if (interval < 60*60*1000) {
+			basicDateTime = basicDateTime - basicDateTime % interval;
+		}
+		return new Timestamp(basicDateTime);
 	}
 
 }

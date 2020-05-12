@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @Description
@@ -39,13 +40,15 @@ public class JsonLogSink extends RichSinkFunction<DataAnalysisSignMin> {
     @Override
     public void invoke(DataAnalysisSignMin dataAnalysisSignMin, Context context) {
 
-        logger.info("保存数据到TBase -- " + dataAnalysisSignMin.toString());
+        //dataAnalysisSignMin.setCollectTime(DateTimeUtils.getIntervalBasicTime(dataAnalysisSignMin.getCollectTime()));
+        dataAnalysisSignMin.setCreateTime(new Timestamp(new Date().getTime()));
         dataAnalysisSignMin.setStatus("1");
         String sql = "INSERT INTO data_analysis_sign_min(COLLECT_TIME, TRANSFER_TIMES, CREATE_TIME, STATUS)" +
                 " VALUES(?, ?, ?, 1)";
         Object[] params = new Object[]{dataAnalysisSignMin.getCollectTime(),
                 dataAnalysisSignMin.getTransferTimes(),
                 Timestamp.valueOf(DateTimeUtils.customDateTime(0, CONSTANTS.DATE_TIME_FORMAT_1))};
+        logger.info("保存数据到TBase -- " + dataAnalysisSignMin.toString());
         tBaseUtils.executeUpdate(sql, params);
     }
 
