@@ -42,13 +42,12 @@ public class JsonLogSink extends RichSinkFunction<DataAnalysisSignMin> {
 
         //dataAnalysisSignMin.setCollectTime(DateTimeUtils.getIntervalBasicTime(dataAnalysisSignMin.getCollectTime()));
         dataAnalysisSignMin.setCreateTime(new Timestamp(new Date().getTime()));
-        dataAnalysisSignMin.setStatus("1");
-        String sql = "INSERT INTO data_analysis_sign_min(COLLECT_TIME, TRANSFER_TIMES, CREATE_TIME, STATUS)" +
-                " VALUES(?, ?, ?, 1) ON CONFLICT (COLLECT_TIME) DO UPDATE SET TRANSFER_TIMES = TRANSFER_TIMES + ?";
-        Object[] params = new Object[]{dataAnalysisSignMin.getCollectTime(),
+        String sql = "INSERT INTO data_analysis_sign_min(COLLECT_TIME, TRANSFER_TIMES, CREATE_TIME)" +
+                " VALUES(?, ?, ?) ";
+        Object[] params = new Object[]{
+                dataAnalysisSignMin.getCollectTime(),
                 dataAnalysisSignMin.getTransferTimes(),
-                dataAnalysisSignMin.getCreateTime(),
-                dataAnalysisSignMin.getTransferTimes()};
+                dataAnalysisSignMin.getCreateTime()};
         logger.info("保存数据到TBase -- " + dataAnalysisSignMin.toString());
         tBaseUtils.executeUpdate(sql, params);
     }

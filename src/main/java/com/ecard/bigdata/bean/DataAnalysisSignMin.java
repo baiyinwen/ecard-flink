@@ -15,7 +15,7 @@ public class DataAnalysisSignMin implements Serializable {
     private Timestamp collectTime;
     private Integer transferTimes;
     private Timestamp createTime;
-    private String status;
+    private int status;
 
     public int getId() {
         return id;
@@ -49,11 +49,11 @@ public class DataAnalysisSignMin implements Serializable {
         this.createTime = createTime;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
