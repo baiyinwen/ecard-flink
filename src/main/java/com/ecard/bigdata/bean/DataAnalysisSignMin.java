@@ -15,7 +15,7 @@ public class DataAnalysisSignMin implements Serializable {
     private Timestamp collectTime;
     private Integer transferTimes;
     private Timestamp createTime;
-    private int status;
+    private int status = 1;
 
     public int getId() {
         return id;
@@ -64,7 +64,7 @@ public class DataAnalysisSignMin implements Serializable {
                 ", collectTime=" + collectTime +
                 ", transferTimes=" + transferTimes +
                 ", createTime=" + createTime +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 '}';
     }
 }

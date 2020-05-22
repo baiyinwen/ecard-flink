@@ -3,6 +3,7 @@ package com.ecard.bigdata.utils;
 import com.ecard.bigdata.constants.CONFIGS;
 import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
@@ -24,7 +25,7 @@ public class ExecutionEnvUtils {
                 parameterTool.getInt(CONFIGS.RESTART_ATTEMPTS), parameterTool.getInt(CONFIGS.DELAY_BETWEEN_ATTEMPTS)));
         //设置checkpoint
         if (parameterTool.getBoolean(CONFIGS.STREAM_CHECKPOINT_ENABLE)) {
-            env.enableCheckpointing(parameterTool.getInt(CONFIGS.STREAM_CHECKPOINT_INTERVAL));
+            env.enableCheckpointing(parameterTool.getInt(CONFIGS.STREAM_CHECKPOINT_INTERVAL), CheckpointingMode.AT_LEAST_ONCE);
         }
         env.getConfig().setGlobalJobParameters(parameterTool);
         //设置流的时间(IngestionTime:数据进入流的时间，ProcessingTime:处理数据的时间，EventTime:数据自带的时间戳)

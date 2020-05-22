@@ -1,16 +1,12 @@
 package com.ecard.bigdata.sink;
 
 import com.ecard.bigdata.bean.DataAnalysisSignMin;
-import com.ecard.bigdata.constants.CONSTANTS;
 import com.ecard.bigdata.utils.DateTimeUtils;
 import com.ecard.bigdata.utils.TBaseUtils;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * @Description
@@ -40,7 +36,7 @@ public class JsonLogSink extends RichSinkFunction<DataAnalysisSignMin> {
     @Override
     public void invoke(DataAnalysisSignMin dataAnalysisSignMin, Context context) {
 
-        //dataAnalysisSignMin.setCollectTime(DateTimeUtils.getIntervalBasicTime(dataAnalysisSignMin.getCollectTime()));
+        dataAnalysisSignMin.setCollectTime(DateTimeUtils.getIntervalBasicTime(dataAnalysisSignMin.getCollectTime()));
         String sql = "INSERT INTO data_analysis_sign_min(COLLECT_TIME, TRANSFER_TIMES)" +
                 " VALUES(?, ?) ";
         Object[] params = new Object[]{

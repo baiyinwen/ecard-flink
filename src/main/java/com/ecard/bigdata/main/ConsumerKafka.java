@@ -83,7 +83,7 @@ public class ConsumerKafka {
 
         reduceRes.addSink(new JsonLogSink());
 
-        env.execute(parameterTool.get(CONFIGS.JOB_NAME));
+        env.execute();
 
     }
 
