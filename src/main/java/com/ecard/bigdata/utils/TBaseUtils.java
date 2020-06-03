@@ -32,11 +32,11 @@ public class TBaseUtils {
 
     private TBaseUtils() {
 
-        int dataSourceSize = ConfigUtil.getInteger(CONFIGS.TBASE_JDBC_DATASOURCE_SIZE);
+        int dataSourceSize = ConfigUtils.getInteger(CONFIGS.TBASE_JDBC_DATASOURCE_SIZE);
         for(int i = 0; i < dataSourceSize; i++) {
-            String url = ConfigUtil.getString(CONFIGS.TBASE_JDBC_URL);
-            String user = ConfigUtil.getString(CONFIGS.TBASE_JDBC_USER);
-            String password = ConfigUtil.getString(CONFIGS.TBASE_JDBC_PASSWORD);
+            String url = ConfigUtils.getString(CONFIGS.TBASE_JDBC_URL);
+            String user = ConfigUtils.getString(CONFIGS.TBASE_JDBC_USER);
+            String password = ConfigUtils.getString(CONFIGS.TBASE_JDBC_PASSWORD);
             try {
                 Connection conn = DriverManager.getConnection(url, user, password);
                 dataSource.push(conn);

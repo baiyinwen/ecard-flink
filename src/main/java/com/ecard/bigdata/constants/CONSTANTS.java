@@ -26,4 +26,8 @@ public class CONSTANTS {
     public final static String EVENT_MSG_CODE_VALUE = "000000";
     public final static String EVENT_ESSC_LOG_SIGN = "essc_log_sign";
 
+    public final static String NGINX_STATUS_SUCCESS_VALUE = "200";
+
+    public final static String REDIS_SIGN_LOG_MD5_KEY = "signLogMd5";
+
 }

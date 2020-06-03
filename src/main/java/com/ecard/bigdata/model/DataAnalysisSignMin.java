@@ -1,4 +1,4 @@
-package com.ecard.bigdata.bean;
+package com.ecard.bigdata.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

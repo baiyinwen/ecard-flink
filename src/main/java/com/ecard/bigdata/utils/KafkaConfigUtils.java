@@ -1,6 +1,6 @@
 package com.ecard.bigdata.utils;
 
-import com.ecard.bigdata.model.JsonLog;
+import com.ecard.bigdata.bean.JsonLogInfo;
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.schemas.JsonLogSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -36,14 +36,14 @@ public class KafkaConfigUtils {
      * @param parameterTool
      * @return
      */
-    public static Properties createKafkaProps(ParameterTool parameterTool) {
+    public static Properties createKafkaProps(ParameterTool parameterTool, String kafkaTopic) {
 
         Properties props = parameterTool.getProperties();
 
         props.put("zookeeper.connect", parameterTool.get(CONFIGS.ZOOKEEPER_SERVERS));
         props.put("bootstrap.servers", parameterTool.get(CONFIGS.KAFKA_BROKERS));
 
-        props.put("group.id", parameterTool.get(CONFIGS.KAFKA_TOPIC) + "_group_1");
+        props.put("group.id", parameterTool.get(kafkaTopic) + "_group_1");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("auto.offset.reset", "earliest");
@@ -58,37 +58,36 @@ public class KafkaConfigUtils {
         return props;
     }
 
-
-    public static DataStreamSource<JsonLog> createSource(StreamExecutionEnvironment env) {
+    public static DataStreamSource<JsonLogInfo> createSource(StreamExecutionEnvironment env, String kafkaTopic) {
         ParameterTool parameter = (ParameterTool) env.getConfig().getGlobalJobParameters();
-        String topic = parameter.getRequired(CONFIGS.KAFKA_TOPIC);
+        String topic = parameter.getRequired(kafkaTopic);
         Long time = parameter.getLong(CONFIGS.CONSUMER_FROM_TIME, 0L);
         return createSource(env, topic, time);
     }
 
     /**
      * @param env
-     * @param topic
+     * @param kafkaTopic
      * @param time  订阅的时间
      * @return
      * @throws IllegalAccessException
      */
-    public static DataStreamSource<JsonLog> createSource(StreamExecutionEnvironment env, String topic, Long time) {
+    public static DataStreamSource<JsonLogInfo> createSource(StreamExecutionEnvironment env, String kafkaTopic, Long time) {
         ParameterTool parameterTool = (ParameterTool) env.getConfig().getGlobalJobParameters();
-        Properties props = createKafkaProps(parameterTool);
-        FlinkKafkaConsumer010<JsonLog> consumer = new FlinkKafkaConsumer010<>(topic, new JsonLogSchema(), props);
+        Properties props = createKafkaProps(parameterTool, kafkaTopic);
+        FlinkKafkaConsumer010<JsonLogInfo> consumer = new FlinkKafkaConsumer010<>(kafkaTopic, new JsonLogSchema(), props);
         //重置offset到time时刻
         if (time != 0L) {
-            Map<KafkaTopicPartition, Long> partitionOffset = createOffsetByTime(props, parameterTool, time);
+            Map<KafkaTopicPartition, Long> partitionOffset = createOffsetByTime(props, parameterTool, kafkaTopic, time);
             consumer.setStartFromSpecificOffsets(partitionOffset);
         }
         return env.addSource(consumer);
     }
 
-    private static Map<KafkaTopicPartition, Long> createOffsetByTime(Properties props, ParameterTool parameterTool, Long time) {
+    private static Map<KafkaTopicPartition, Long> createOffsetByTime(Properties props, ParameterTool parameterTool, String kafkaTopic, Long time) {
         props.setProperty("group.id", "query_time_" + time);
         KafkaConsumer consumer = new KafkaConsumer(props);
-        List<PartitionInfo> partitionsFor = consumer.partitionsFor(parameterTool.getRequired(CONFIGS.KAFKA_TOPIC));
+        List<PartitionInfo> partitionsFor = consumer.partitionsFor(parameterTool.getRequired(kafkaTopic));
         Map<TopicPartition, Long> partitionInfoLongMap = new HashMap<>();
         for (PartitionInfo partitionInfo : partitionsFor) {
             partitionInfoLongMap.put(new TopicPartition(partitionInfo.topic(), partitionInfo.partition()), time);

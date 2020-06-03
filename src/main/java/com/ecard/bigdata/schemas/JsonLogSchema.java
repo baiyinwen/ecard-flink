@@ -1,6 +1,6 @@
 package com.ecard.bigdata.schemas;
 
-import com.ecard.bigdata.model.JsonLog;
+import com.ecard.bigdata.bean.JsonLogInfo;
 import com.google.gson.Gson;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.serialization.SerializationSchema;
@@ -16,34 +16,39 @@ import java.nio.charset.Charset;
  * @Date 2020/4/13 10:49
  * @Version 1.0
  **/
-public class JsonLogSchema implements DeserializationSchema<JsonLog>, SerializationSchema<JsonLog> {
+public class JsonLogSchema implements DeserializationSchema<JsonLogInfo>, SerializationSchema<JsonLogInfo> {
 
     private static Logger logger = LoggerFactory.getLogger(JsonLogSchema.class);
 
     private static final Gson gson = new Gson();
 
     @Override
-    public JsonLog deserialize(byte[] bytes) {
+    public JsonLogInfo deserialize(byte[] bytes) {
 
-        JsonLog jsonLog = gson.fromJson(new String(bytes), JsonLog.class);
-        return jsonLog;
+        String origLog = new String(bytes);
+        if (!origLog.isEmpty()) {
+            JsonLogInfo jsonLogInfo = gson.fromJson(origLog, JsonLogInfo.class);
+            jsonLogInfo.setOrigLog(origLog);
+            return jsonLogInfo;
+        }
+        return null;
     }
 
     @Override
-    public boolean isEndOfStream(JsonLog jsonLog) {
+    public boolean isEndOfStream(JsonLogInfo jsonLogInfo) {
 
         return false;
     }
 
     @Override
-    public TypeInformation<JsonLog> getProducedType() {
+    public TypeInformation<JsonLogInfo> getProducedType() {
 
-        return TypeInformation.of(JsonLog.class);
+        return TypeInformation.of(JsonLogInfo.class);
     }
 
     @Override
-    public byte[] serialize(JsonLog jsonLog) {
+    public byte[] serialize(JsonLogInfo jsonLogInfo) {
 
-        return gson.toJson(jsonLog).getBytes(Charset.forName("UTF-8"));
+        return gson.toJson(jsonLogInfo).getBytes(Charset.forName("UTF-8"));
     }
 }

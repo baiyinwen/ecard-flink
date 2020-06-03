@@ -1,4 +1,4 @@
-package com.ecard.bigdata.model;
+package com.ecard.bigdata.bean;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @Date 2019/9/19 15:28
  * @Version 1.0
  **/
-public class JsonLog<I, O> implements Serializable {
+public class JsonLogInfo<I, O> implements Serializable {
 
     private String channelNo;
     private String costTime;
@@ -18,6 +18,7 @@ public class JsonLog<I, O> implements Serializable {
     private String time;
     private String type;
     private String version;
+    private String origLog;
 
     public String getChannelNo() {
         return channelNo;
@@ -81,6 +82,14 @@ public class JsonLog<I, O> implements Serializable {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getOrigLog() {
+        return origLog;
+    }
+
+    public void setOrigLog(String origLog) {
+        this.origLog = origLog;
     }
 
     @Override
