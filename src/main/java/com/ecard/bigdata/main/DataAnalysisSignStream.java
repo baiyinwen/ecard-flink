@@ -56,6 +56,8 @@ public class DataAnalysisSignStream {
         consumer.setStartFromLatest();
         DataStreamSource<JsonLogInfo> data = env.addSource(consumer);
 
+        int reParallelism = (int) Math.ceil(parameterTool.getDouble(CONFIGS.STREAM_PARALLELISM)/2.0);
+
         DataStream<DataAnalysisSignMin> mapRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
                 String event = jsonLogInfo.getEvent();
@@ -63,11 +65,11 @@ public class DataAnalysisSignStream {
                 if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
                         && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
                     String md5Log = Md5Utils.encodeMd5(jsonLogInfo.getOrigLog());
-                    boolean isMember = RedisUtils.isMember(CONSTANTS.REDIS_SIGN_LOG_MD5_KEY, md5Log);
+                    boolean isMember = RedisUtils.isMember(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY, md5Log);
                     if (isMember) {
                         return false;
                     } else {
-                        RedisUtils.setSet(CONSTANTS.REDIS_SIGN_LOG_MD5_KEY, md5Log);
+                        RedisUtils.setSet(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY, md5Log);
                     }
                     return true;
                 }
@@ -78,7 +80,7 @@ public class DataAnalysisSignStream {
             dataAnalysisSignMin.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
             dataAnalysisSignMin.setTransferTimes(CONSTANTS.NUMBER_1);
             return dataAnalysisSignMin;
-        }).returns(TypeInformation.of(new TypeHint<DataAnalysisSignMin>() {})).setParallelism(1);
+        }).returns(TypeInformation.of(new TypeHint<DataAnalysisSignMin>() {})).setParallelism(reParallelism);
 
         DataStream<DataAnalysisSignMin> reduceRes = mapRes.assignTimestampsAndWatermarks(new DataAnalysisSignWatermark())
                 .timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_TUMBLING_WINDOW_SIZE)))
@@ -92,7 +94,7 @@ public class DataAnalysisSignStream {
 
         reduceRes.addSink(new DataAnalysisSignSink());
 
-        env.execute();
+        env.execute("DataAnalysisSignStream");
 
     }
 

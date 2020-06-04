@@ -36,7 +36,7 @@ public class PushToFalconUtils {
     private CloseableHttpClient createHttpClient() {
 
         PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager();
-        manager.setMaxTotal(5);
+        manager.setMaxTotal(10);
         return HttpClients.custom().setConnectionManager(manager).build();
     }
 

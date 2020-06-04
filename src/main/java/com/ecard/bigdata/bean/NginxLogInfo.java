@@ -20,6 +20,7 @@ public class NginxLogInfo implements Serializable {
     private long time;
     /**返回码**/
     private String code;
+    private String origLog;
 
     public String getIp() {
         return ip;
@@ -59,6 +60,14 @@ public class NginxLogInfo implements Serializable {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getOrigLog() {
+        return origLog;
+    }
+
+    public void setOrigLog(String origLog) {
+        this.origLog = origLog;
     }
 
     @Override

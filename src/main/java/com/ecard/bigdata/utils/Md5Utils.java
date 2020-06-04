@@ -35,7 +35,6 @@ public class Md5Utils {
     public static String encodeMd5(String data) {
 
         String result = DigestUtils.md5Hex(data).toUpperCase();
-        logger.info(data + "\nencodeMd5: " + result);
         return result;
     }
 

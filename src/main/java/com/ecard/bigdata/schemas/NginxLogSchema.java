@@ -34,8 +34,13 @@ public class NginxLogSchema implements DeserializationSchema<NginxLogInfo>, Seri
     @Override
     public NginxLogInfo deserialize(byte[] bytes) {
 
-        NginxLogInfo nginxLogInfo = parseLogToBean(new String(bytes));
-        return nginxLogInfo;
+        String origLog = new String(bytes);
+        if (!origLog.isEmpty()) {
+            NginxLogInfo nginxLogInfo = parseLogToBean(new String(bytes));
+            nginxLogInfo.setOrigLog(origLog);
+            return nginxLogInfo;
+        }
+        return null;
     }
 
     @Override
