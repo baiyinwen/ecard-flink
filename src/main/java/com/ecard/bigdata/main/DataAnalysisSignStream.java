@@ -65,11 +65,12 @@ public class DataAnalysisSignStream {
                 if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
                         && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
                     String md5Log = Md5Utils.encodeMd5(jsonLogInfo.getOrigLog());
-                    boolean isMember = RedisUtils.isMember(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY, md5Log);
+                    boolean isMember = RedisUtils.isExistsKey(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY + md5Log);
                     if (isMember) {
                         return false;
                     } else {
-                        RedisUtils.setSet(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY, md5Log);
+                        RedisUtils.setValue(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_MD5_KEY);
+                        RedisUtils.setExpire(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_KEY_EXPIRE_SECONDS);
                     }
                     return true;
                 }
@@ -86,10 +87,8 @@ public class DataAnalysisSignStream {
                 .timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_TUMBLING_WINDOW_SIZE)))
                 .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_MAX_ALLOWED_LATENESS)))
                 .reduce((ReduceFunction<DataAnalysisSignMin>) (d1, d2) -> {
-                    DataAnalysisSignMin dataAnalysisSignMin = new DataAnalysisSignMin();
-                    dataAnalysisSignMin.setCollectTime(d1.getCollectTime());
-                    dataAnalysisSignMin.setTransferTimes(d1.getTransferTimes() + d2.getTransferTimes());
-                    return dataAnalysisSignMin;
+                    d1.setTransferTimes(d1.getTransferTimes() + d2.getTransferTimes());
+                    return d1;
                 }).returns(TypeInformation.of(new TypeHint<DataAnalysisSignMin>() {}));
 
         reduceRes.addSink(new DataAnalysisSignSink());

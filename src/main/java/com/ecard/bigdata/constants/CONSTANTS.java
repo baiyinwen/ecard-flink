@@ -29,6 +29,8 @@ public class CONSTANTS {
     public final static String NGINX_STATUS_SUCCESS_VALUE = "200";
 
     public final static String SIGN_REDIS_LOG_MD5_KEY = "signLogMd5";
+    public final static int SIGN_REDIS_LOG_KEY_EXPIRE_SECONDS = 3600;
     public final static String COST_TIME_REDIS_LOG_MD5_KEY = "costTimeLogMd5";
+    public final static int COST_TIME_REDIS_LOG_KEY_EXPIRE_SECONDS = 3600;
 
 }

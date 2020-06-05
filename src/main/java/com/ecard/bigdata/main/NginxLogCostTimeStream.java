@@ -74,11 +74,12 @@ public class NginxLogCostTimeStream {
                     for (String event: events) {
                         if (!event.trim().isEmpty() && event.trim().equals(nginxLogInfo.getEvent().trim())) {
                             String md5Log = Md5Utils.encodeMd5(nginxLogInfo.getOrigLog());
-                            boolean isMember = RedisUtils.isMember(CONSTANTS.COST_TIME_REDIS_LOG_MD5_KEY, md5Log);
+                            boolean isMember = RedisUtils.isExistsKey(CONSTANTS.COST_TIME_REDIS_LOG_MD5_KEY + md5Log);
                             if (isMember) {
                                 return false;
                             } else {
-                                RedisUtils.setSet(CONSTANTS.COST_TIME_REDIS_LOG_MD5_KEY, md5Log);
+                                RedisUtils.setValue(CONSTANTS.COST_TIME_REDIS_LOG_MD5_KEY + md5Log, CONSTANTS.COST_TIME_REDIS_LOG_MD5_KEY);
+                                RedisUtils.setExpire(CONSTANTS.COST_TIME_REDIS_LOG_MD5_KEY + md5Log, CONSTANTS.COST_TIME_REDIS_LOG_KEY_EXPIRE_SECONDS);
                             }
                             return true;
                         }
@@ -99,9 +100,8 @@ public class NginxLogCostTimeStream {
                 .timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.COST_TIME_TUMBLING_WINDOW_SIZE)))
                 .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.COST_TIME_MAX_ALLOWED_LATENESS)))
                 .reduce((ReduceFunction<NginxLogCostTime>) (d1, d2) -> {
-                    NginxLogCostTime nginxLogCostTime = new NginxLogCostTime();
-                    nginxLogCostTime.setTime(d2.getTime());
-                    return nginxLogCostTime;
+                    d1.setCostTime(d2.getCostTime());
+                    return d1;
                 }).returns(TypeInformation.of(new TypeHint<NginxLogCostTime>() {}));
 
         reduceRes.addSink(new NginxLogCostTimeSink());

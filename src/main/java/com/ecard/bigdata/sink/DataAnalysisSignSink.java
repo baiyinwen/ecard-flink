@@ -54,7 +54,7 @@ public class DataAnalysisSignSink extends RichSinkFunction<DataAnalysisSignMin> 
     public void invoke(DataAnalysisSignMin dataAnalysisSignMin, Context context) {
 
         saveDataAnalysisSignMin(dataAnalysisSignMin);
-        //pushDataAnalysisSignMin(dataAnalysisSignMin);
+        pushDataAnalysisSignMin(dataAnalysisSignMin);
     }
 
     private void saveDataAnalysisSignMin(DataAnalysisSignMin dataAnalysisSignMin) {

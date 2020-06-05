@@ -73,6 +73,28 @@ public class RedisUtils {
         }
     }
 
+    public static boolean isExistsKey(String key) {
+
+        Jedis jedis = getConn();
+        boolean isExists = jedis.exists(key);
+        returnConn(jedis);
+        return  isExists;
+    }
+
+    public static void setExpire(String key, int seconds) {
+
+        Jedis jedis = getConn();
+        jedis.expire(key, seconds);
+        returnConn(jedis);
+    }
+
+    public static void setPExpire(String key, long millSeconds) {
+
+        Jedis jedis = getConn();
+        jedis.pexpire(key, millSeconds);
+        returnConn(jedis);
+    }
+
     public static String getValue(String key) {
 
         Jedis jedis = getConn();
@@ -81,7 +103,7 @@ public class RedisUtils {
         return value;
     }
 
-    public static void setKV(String key, String value) {
+    public static void setValue(String key, String value) {
 
         Jedis jedis = getConn();
         jedis.set(key, value);
