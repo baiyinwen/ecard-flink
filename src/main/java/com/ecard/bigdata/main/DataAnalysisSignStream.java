@@ -65,12 +65,12 @@ public class DataAnalysisSignStream {
                 if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
                         && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
                     String md5Log = Md5Utils.encodeMd5(jsonLogInfo.getOrigLog());
-                    boolean isMember = RedisUtils.isExistsKey(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY + md5Log);
+                    boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY + md5Log);
                     if (isMember) {
                         return false;
                     } else {
-                        RedisUtils.setValue(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_MD5_KEY);
-                        RedisUtils.setExpire(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_KEY_EXPIRE_SECONDS);
+                        RedisClusterUtils.setValue(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_MD5_KEY);
+                        RedisClusterUtils.setExpire(CONSTANTS.SIGN_REDIS_LOG_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_KEY_EXPIRE_SECONDS);
                     }
                     return true;
                 }

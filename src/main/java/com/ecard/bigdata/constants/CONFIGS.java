@@ -18,22 +18,15 @@ public class CONFIGS {
     public final static String TBASE_JDBC_PASSWORD = "tbase.jdbc.password";
 
     /*redis参数*/
-    public final static String REDIS_HOST = "redis.host";
+    public final static String REDIS_HOSTS = "redis.hosts";
     public final static String REDIS_PORT = "redis.port";
-    public final static String REDIS_TIMEOUT = "redis.timeout";
     public final static String REDIS_PASSWORD = "redis.password";
     public final static String REDIS_MAX_TOTAL = "redis.max.total";
-    public final static String REDIS_MAX_IDLE = "redis.max.idle";
-    public final static String REDIS_MIN_IDLE = "redis.min.idle";
-    public final static String REDIS_BLOCK_WHEN_EXHAUSTED = "redis.block.when.exhausted";
-    public final static String REDIS_MAX_WAIT_MILLIS = "redis.max.wait.millis";
 
     public final static String OPEN_FALCON_PUSH_URL = "open.falcon.push.url";
 
     public final static String KAFKA_SASL_ENABLE = "kafka.sasl.enable";
 
-    public final static String RESTART_ATTEMPTS = "restart.attempts";
-    public final static String DELAY_BETWEEN_ATTEMPTS = "delay.between.attempts";
     public final static String STREAM_PARALLELISM = "stream.parallelism";
 
     public final static String SASL_TBDS_SECURE_ID = "sasl.tbds.secure.id";
