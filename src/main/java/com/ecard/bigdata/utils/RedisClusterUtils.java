@@ -78,11 +78,6 @@ public class RedisClusterUtils {
         jedisCluster.expire(key, seconds);
     }
 
-    public static void setPExpire(String key, long millSeconds) {
-
-        jedisCluster.pexpire(key, millSeconds);
-    }
-
     public static String getValue(String key) {
 
         String value = jedisCluster.get(key);
@@ -94,26 +89,9 @@ public class RedisClusterUtils {
         jedisCluster.set(key, value);
     }
 
-    public static Set<String> getSet(String key) {
-
-        Set<String> sets = jedisCluster.smembers(key);
-        return sets;
-    }
-
-    public static void setSet(String key, String member) {
-
-        jedisCluster.sadd(key, member);
-    }
-
-    public static boolean isMember(String key, String member) {
-
-        boolean isMember = jedisCluster.sismember(key, member);
-        return isMember;
-    }
-
     public static void main(String[] args) {
 
-        RedisClusterUtils.setValue("signLogMd5", "aaa");
+        System.err.println(getValue("signa"));
 
     }
 }
