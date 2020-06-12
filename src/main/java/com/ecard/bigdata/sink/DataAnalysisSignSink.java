@@ -59,22 +59,22 @@ public class DataAnalysisSignSink extends RichSinkFunction<DataAnalysisSignMin> 
 
     private void saveDataAnalysisSignMin(DataAnalysisSignMin dataAnalysisSignMin) {
 
-        logger.info("ready to save -- " + dataAnalysisSignMin.toString());
-        dataAnalysisSignMin.setCollectTime(DateTimeUtils.getIntervalBasicTime(dataAnalysisSignMin.getCollectTime()));
+        dataAnalysisSignMin.setCollectTime(DateTimeUtils.getIntervalBasicTime(dataAnalysisSignMin.getCollectTime().getTime()));
         String sql = "INSERT INTO data_analysis_sign_min(COLLECT_TIME, TRANSFER_TIMES)" +
                 " VALUES(?, ?) ";
         Object[] params = new Object[]{
                 dataAnalysisSignMin.getCollectTime(),
                 dataAnalysisSignMin.getTransferTimes()};
+        logger.info("ready to save -- " + dataAnalysisSignMin.toString());
         tBaseUtils.executeUpdate(sql, params);
     }
 
     private void pushDataAnalysisSignMin(DataAnalysisSignMin dataAnalysisSignMin) {
 
-        logger.info("ready to push -- " + dataAnalysisSignMin.toString());
         String metric = CONSTANTS.EVENT_ESSC_LOG_SIGN;
         long timestamp = dataAnalysisSignMin.getCollectTime().getTime();
         float value = dataAnalysisSignMin.getTransferTimes();
+        logger.info("ready to push -- " + dataAnalysisSignMin.toString());
         pushToFalconUtils.sendInfoToFalcon(endpoint, metric, timestamp, step, value, counterType, tags);
     }
 

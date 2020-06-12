@@ -55,7 +55,7 @@ public class NginxLogCostTimeStream {
 
         NginxLogSchema nginxLogSchema = new NginxLogSchema();
         FlinkKafkaConsumer010<NginxLogInfo> consumer = new FlinkKafkaConsumer010<>(topic, nginxLogSchema, props);
-        //consumer.setStartFromLatest();//设置从最新位置开始消费
+        consumer.setStartFromLatest();//设置从最新位置开始消费
         DataStreamSource<NginxLogInfo> data = env.addSource(consumer);
 
         int reParallelism = (int) Math.ceil(parameterTool.getDouble(CONFIGS.STREAM_PARALLELISM)/2.0);

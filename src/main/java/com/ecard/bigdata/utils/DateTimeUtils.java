@@ -94,10 +94,10 @@ public class DateTimeUtils {
 		return sdf.format(timestamp);
 	}
 
-	public static Timestamp getIntervalBasicTime(Timestamp eventTime){
+	public static Timestamp getIntervalBasicTime(long eventTime){
 
 		long interval = ConfigUtils.getLong(CONFIGS.SIGN_TUMBLING_WINDOW_SIZE) * 1000;
-		long basicDateTime = eventTime.getTime();
+		long basicDateTime = eventTime;
 		if (interval < 60*60*1000) {
 			basicDateTime = basicDateTime - basicDateTime % interval;
 		}

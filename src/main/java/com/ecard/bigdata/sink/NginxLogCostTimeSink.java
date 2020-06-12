@@ -3,6 +3,7 @@ package com.ecard.bigdata.sink;
 import com.ecard.bigdata.model.NginxLogCostTime;
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.utils.ConfigUtils;
+import com.ecard.bigdata.utils.DateTimeUtils;
 import com.ecard.bigdata.utils.PushToFalconUtils;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
@@ -53,12 +54,13 @@ public class NginxLogCostTimeSink extends RichSinkFunction<NginxLogCostTime> {
 
     private void pushNginxLogCostTime(NginxLogCostTime nginxLogCostTime) {
 
-        logger.info("ready to push -- " + nginxLogCostTime.toString());
+        nginxLogCostTime.setTime(DateTimeUtils.getIntervalBasicTime(nginxLogCostTime.getTime()).getTime());
         //目前统一服务器，以后会分nginx服务器，即:IP+endpoint
         String pushEndpoint = endpoint;
         String metric = nginxLogCostTime.getEvent();
         long timestamp = nginxLogCostTime.getTime();
         float value = nginxLogCostTime.getCostTime();
+        logger.info("ready to push -- " + nginxLogCostTime.toString());
         pushToFalconUtils.sendInfoToFalcon(pushEndpoint, metric, timestamp, step, value, counterType, tags);
     }
 
