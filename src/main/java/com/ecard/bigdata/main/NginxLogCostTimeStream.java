@@ -99,7 +99,7 @@ public class NginxLogCostTimeStream {
 
         DataStream<NginxLogCostTime> reduceRes = mapRes//.assignTimestampsAndWatermarks(new NginxLogCostTimeWatermark())
                 .timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.COST_TIME_TUMBLING_WINDOW_SIZE)))
-                .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.COST_TIME_MAX_ALLOWED_LATENESS)))
+                //.allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.COST_TIME_MAX_ALLOWED_LATENESS)))
                 .reduce((ReduceFunction<NginxLogCostTime>) (d1, d2) -> {
                     d1.setCostTime(d2.getCostTime());
                     return d1;

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,8 +77,9 @@ public class NginxLogSchema implements DeserializationSchema<NginxLogInfo>, Seri
         if (matcher.find() && matcher.groupCount() == 1) {
             costTime = Float.parseFloat(matcher.group(1).trim());
         }
-        /*long time = -1;
-        matcher = timePattern.matcher(logLine);
+        long time = -1;
+        time = new Date().getTime();
+        /*matcher = timePattern.matcher(logLine);
         if (matcher.find() && matcher.groupCount() == 1) {
             time = DateTimeUtils.parseDateTime_3(matcher.group(1).trim());
         }*/
@@ -103,6 +105,7 @@ public class NginxLogSchema implements DeserializationSchema<NginxLogInfo>, Seri
         NginxLogInfo nginxLogInfo = new NginxLogInfo();
         nginxLogInfo.setIp(ip);
         nginxLogInfo.setEvent(event);
+        nginxLogInfo.setTime(time);
         nginxLogInfo.setCostTime(costTime);
         nginxLogInfo.setCode(code);
 
