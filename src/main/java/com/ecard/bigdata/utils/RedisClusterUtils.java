@@ -42,7 +42,6 @@ public class RedisClusterUtils {
             REDIS_HOSTS = ConfigUtils.getString(CONFIGS.REDIS_HOSTS).split(",");
             REDIS_PORT = ConfigUtils.getInteger(CONFIGS.REDIS_PORT);
             REDIS_PASSWORD = ConfigUtils.getString(CONFIGS.REDIS_PASSWORD);
-            REDIS_MAX_TOTAL = ConfigUtils.getInteger(CONFIGS.REDIS_MAX_TOTAL);
 
             Set<HostAndPort> hostAndPortsSet = new HashSet<>();
             for (String redis_host : REDIS_HOSTS) {

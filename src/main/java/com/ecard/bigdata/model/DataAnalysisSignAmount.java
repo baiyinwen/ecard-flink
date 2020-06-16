@@ -9,7 +9,7 @@ import java.sql.Timestamp;
  * @Date 2019/9/20 11:41
  * @Version 1.0
  **/
-public class DataAnalysisSignMin implements Serializable {
+public class DataAnalysisSignAmount implements Serializable {
 
     private int id;
     private Timestamp collectTime;

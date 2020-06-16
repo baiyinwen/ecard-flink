@@ -12,7 +12,6 @@ public class CONFIGS {
     public final static String ZOOKEEPER_SERVERS = "zookeeper.servers";
 
     /*TBase参数*/
-    public final static String TBASE_JDBC_DATASOURCE_SIZE = "tbase.jdbc.datasource.size";
     public final static String TBASE_JDBC_URL = "tbase.jdbc.url";
     public final static String TBASE_JDBC_USER = "tbase.jdbc.user";
     public final static String TBASE_JDBC_PASSWORD = "tbase.jdbc.password";
@@ -21,7 +20,6 @@ public class CONFIGS {
     public final static String REDIS_HOSTS = "redis.hosts";
     public final static String REDIS_PORT = "redis.port";
     public final static String REDIS_PASSWORD = "redis.password";
-    public final static String REDIS_MAX_TOTAL = "redis.max.total";
 
     public final static String OPEN_FALCON_PUSH_URL = "open.falcon.push.url";
 
@@ -34,25 +32,18 @@ public class CONFIGS {
 
     public final static String CONSUMER_FROM_TIME = "consumer.from.time";
 
-    public final static String SIGN_KAFKA_TOPIC = "sign.kafka.topic";
-    public final static String SIGN_TUMBLING_WINDOW_SIZE = "sign.tumbling.window.size";
-    public final static String SIGN_MAX_OUT_OF_ORDER = "sign.max.out.of.order";
-    public final static String SIGN_MAX_ALLOWED_LATENESS = "sign.max.allowed.lateness";
-    /*签发日志push的配置*/
-    public final static String SIGN_OPEN_FALCON_ENDPOINT = "sign.open.falcon.endpoint";
-    public final static String SIGN_OPEN_FALCON_STEP = "sign.open.falcon.step";
-    public final static String SIGN_OPEN_FALCON_COUNTER_TYPE = "sign.open.falcon.counter.type";
-    public final static String SIGN_OPEN_FALCON_TAGS = "sign.open.falcon.tags";
+    public final static String SIGN_AMOUNT_KAFKA_TOPIC = "sign.amount.kafka.topic";
+    public final static String SIGN_AMOUNT_TUMBLING_WINDOW_SIZE = "sign.amount.tumbling.window.size";
+    public final static String SIGN_AMOUNT_MAX_OUT_OF_ORDER = "sign.amount.max.out.of.order";
+    public final static String SIGN_AMOUNT_MAX_ALLOWED_LATENESS = "sign.amount.max.allowed.lateness";
+
+    public final static String SIGN_ALTER_KAFKA_TOPIC = "sign.alter.kafka.topic";
+    public final static String SIGN_ALTER_TUMBLING_WINDOW_SIZE = "sign.alter.tumbling.window.size";
+    public final static String SIGN_ALTER_MAX_OUT_OF_ORDER = "sign.alter.max.out.of.order";
+    public final static String SIGN_ALTER_MAX_ALLOWED_LATENESS = "sign.alter.max.allowed.lateness";
 
     public final static String COST_TIME_KAFKA_TOPIC = "cost.time.kafka.topic";
     public final static String COST_TIME_TUMBLING_WINDOW_SIZE = "cost.time.tumbling.window.size";
-    public final static String COST_TIME_MAX_OUT_OF_ORDER = "cost.time.max.out.of.order";
-    public final static String COST_TIME_MAX_ALLOWED_LATENESS = "cost.time.max.allowed.lateness";
-    /*接口调用时长push的配置*/
-    public final static String COST_TIME_OPEN_FALCON_ENDPOINT = "cost.time.open.falcon.endpoint";
-    public final static String COST_TIME_OPEN_FALCON_STEP = "cost.time.open.falcon.step";
-    public final static String COST_TIME_OPEN_FALCON_COUNTER_TYPE = "cost.time.open.falcon.counter.type";
-    public final static String COST_TIME_OPEN_FALCON_TAGS = "cost.time.open.falcon.tags";
 
     public final static String COST_TIME_EVENT_CODE_POST1 = "cost.time.event.code.post1";
     public final static String COST_TIME_EVENT_CODE_POST2 = "cost.time.event.code.post2";

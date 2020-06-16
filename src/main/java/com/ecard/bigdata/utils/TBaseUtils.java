@@ -19,6 +19,7 @@ import java.util.List;
 public class TBaseUtils {
 
     private static Logger logger = LoggerFactory.getLogger(TBaseUtils.class);
+    private static int dataSourceSize = 5;
     private LinkedList<Connection> dataSource = new LinkedList<Connection>();
     private static TBaseUtils instance = null;
 
@@ -32,7 +33,6 @@ public class TBaseUtils {
 
     private TBaseUtils() {
 
-        int dataSourceSize = ConfigUtils.getInteger(CONFIGS.TBASE_JDBC_DATASOURCE_SIZE);
         for(int i = 0; i < dataSourceSize; i++) {
             String url = ConfigUtils.getString(CONFIGS.TBASE_JDBC_URL);
             String user = ConfigUtils.getString(CONFIGS.TBASE_JDBC_USER);

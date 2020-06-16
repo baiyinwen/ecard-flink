@@ -2,7 +2,7 @@ package com.ecard.bigdata.waterMarkers;
 
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
-import com.ecard.bigdata.model.NginxLogCostTime;
+import com.ecard.bigdata.model.DataAnalysisSignAmount;
 import com.ecard.bigdata.utils.ConfigUtils;
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
 import org.apache.flink.streaming.api.watermark.Watermark;
@@ -17,17 +17,17 @@ import javax.annotation.Nullable;
  * @Date 2020/4/10 10:38
  * @Version 1.0
  **/
-public class NginxLogCostTimeWatermark implements AssignerWithPeriodicWatermarks<NginxLogCostTime> {
+public class SignAmountAlterWatermark implements AssignerWithPeriodicWatermarks<DataAnalysisSignAmount> {
 
-    private static Logger logger = LoggerFactory.getLogger(NginxLogCostTimeWatermark.class);
+    private static Logger logger = LoggerFactory.getLogger(SignAmountAlterWatermark.class);
 
-    private final long maxOutOfOrder  = ConfigUtils.getLong(CONFIGS.COST_TIME_MAX_OUT_OF_ORDER);
+    private final long maxOutOfOrder  = ConfigUtils.getLong(CONFIGS.SIGN_ALTER_MAX_OUT_OF_ORDER);
     private long currentTimestamp = CONSTANTS.NUMBER_0;
 
     @Override
-    public long extractTimestamp(NginxLogCostTime nginxLogCostTime, long previousElementTimestamp) {
+    public long extractTimestamp(DataAnalysisSignAmount dataAnalysisSignAmount, long previousElementTimestamp) {
 
-        long time = nginxLogCostTime.getTime();
+        long time = dataAnalysisSignAmount.getCollectTime().getTime();
         currentTimestamp = Math.max(time, currentTimestamp);
         return time;
     }

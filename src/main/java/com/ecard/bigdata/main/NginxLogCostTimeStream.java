@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * @Description
+ * @Description 接口调用时长报警
  * @Author WangXueDong
  * @Date 2020/4/10 9:24
  * @Version 1.0
@@ -47,8 +47,9 @@ public class NginxLogCostTimeStream {
      **/
     public static void main(String[] args) throws Exception {
 
+        final String ClassName = NginxLogCostTimeStream.class.getSimpleName();
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
-        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, CONFIGS.COST_TIME_KAFKA_TOPIC);
+        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, CONFIGS.COST_TIME_KAFKA_TOPIC, ClassName);
         String topic  = parameterTool.get(CONFIGS.COST_TIME_KAFKA_TOPIC);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
@@ -95,7 +96,6 @@ public class NginxLogCostTimeStream {
             nginxLogCostTime.setCostTime(nginxLogInfo.getCostTime());
             return nginxLogCostTime;
         }).keyBy((KeySelector<NginxLogCostTime, String>) nginxLogCostTime -> nginxLogCostTime.getEvent())
-        //.assignTimestampsAndWatermarks(new NginxLogCostTimeWatermark())
         .timeWindow(Time.seconds(parameterTool.getLong(CONFIGS.COST_TIME_TUMBLING_WINDOW_SIZE)));
 
         DataStream<NginxLogCostTime> reduceRes = timeWindowRes.reduce((ReduceFunction<NginxLogCostTime>) (n1, n2) -> {
@@ -105,7 +105,7 @@ public class NginxLogCostTimeStream {
 
         reduceRes.addSink(new NginxLogCostTimeSink());
 
-        env.execute("NginxLogCostTimeStream");
+        env.execute(ClassName);
 
     }
 

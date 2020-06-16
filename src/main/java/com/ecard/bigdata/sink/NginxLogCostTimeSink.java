@@ -1,8 +1,6 @@
 package com.ecard.bigdata.sink;
 
 import com.ecard.bigdata.model.NginxLogCostTime;
-import com.ecard.bigdata.constants.CONFIGS;
-import com.ecard.bigdata.utils.ConfigUtils;
 import com.ecard.bigdata.utils.DateTimeUtils;
 import com.ecard.bigdata.utils.PushToFalconUtils;
 import org.apache.flink.configuration.Configuration;
@@ -22,20 +20,14 @@ public class NginxLogCostTimeSink extends RichSinkFunction<NginxLogCostTime> {
 
     private PushToFalconUtils pushToFalconUtils;
 
-    private static String endpoint;
-    private static int step;
-    private static String counterType;
-    private static String tags;
+    private static String endpoint = "endpoint_data_cost_time";
+    private static int step = 60;
+    private static String counterType = "GAUGE";
+    private static String tags = "type=cost_time,value=unit_s";
 
     @Override
     public void open(Configuration parameters) throws Exception {
         pushToFalconUtils = new PushToFalconUtils();
-
-        endpoint = ConfigUtils.getString(CONFIGS.COST_TIME_OPEN_FALCON_ENDPOINT);
-        step = ConfigUtils.getInteger(CONFIGS.COST_TIME_OPEN_FALCON_STEP);
-        counterType = ConfigUtils.getString(CONFIGS.COST_TIME_OPEN_FALCON_COUNTER_TYPE);
-        tags = ConfigUtils.getString(CONFIGS.COST_TIME_OPEN_FALCON_TAGS);
-
         logger.info("调用open --- ");
         super.open(parameters);
     }
