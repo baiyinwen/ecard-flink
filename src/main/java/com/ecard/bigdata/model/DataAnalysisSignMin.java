@@ -13,6 +13,8 @@ public class DataAnalysisSignMin implements Serializable {
 
     private int id;
     private Timestamp collectTime;
+    private String channelNo;
+    private String cardRegionCode;
     private Integer transferTimes;
     private Timestamp createTime;
     private int status = 1;
@@ -31,6 +33,22 @@ public class DataAnalysisSignMin implements Serializable {
 
     public void setCollectTime(Timestamp collectTime) {
         this.collectTime = collectTime;
+    }
+
+    public String getChannelNo() {
+        return channelNo;
+    }
+
+    public void setChannelNo(String channelNo) {
+        this.channelNo = channelNo;
+    }
+
+    public String getCardRegionCode() {
+        return cardRegionCode;
+    }
+
+    public void setCardRegionCode(String cardRegionCode) {
+        this.cardRegionCode = cardRegionCode;
     }
 
     public Integer getTransferTimes() {
@@ -62,6 +80,8 @@ public class DataAnalysisSignMin implements Serializable {
         return "DataAnalysisSignMin{" +
                 "id=" + id +
                 ", collectTime=" + collectTime +
+                ", channelNo='" + channelNo + '\'' +
+                ", cardRegionCode='" + cardRegionCode + '\'' +
                 ", transferTimes=" + transferTimes +
                 ", createTime=" + createTime +
                 ", status=" + status +
