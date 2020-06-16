@@ -10,14 +10,15 @@ import com.ecard.bigdata.utils.*;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
-import org.apache.flink.api.common.typeinfo.TypeHint;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +59,6 @@ public class NginxLogCostTimeStream {
         consumer.setStartFromLatest();//设置从最新位置开始消费
         DataStreamSource<NginxLogInfo> data = env.addSource(consumer);
 
-        int reParallelism = (int) Math.ceil(parameterTool.getDouble(CONFIGS.STREAM_PARALLELISM)/2.0);
-
         List<String> events = new ArrayList<>();
         List<String> costTimeEventCodePost1 = Arrays.asList(ConfigUtils.getString(CONFIGS.COST_TIME_EVENT_CODE_POST1).split(","));
         List<String> costTimeEventCodePost2 = Arrays.asList(ConfigUtils.getString(CONFIGS.COST_TIME_EVENT_CODE_POST2).split(","));;
@@ -68,7 +67,7 @@ public class NginxLogCostTimeStream {
         events.addAll(costTimeEventCodePost2);
         events.addAll(costTimeEventCodeGet);
 
-        DataStream<NginxLogCostTime> mapRes = data.filter((FilterFunction<NginxLogInfo>) nginxLogInfo -> {
+        WindowedStream<NginxLogCostTime, String, TimeWindow> timeWindowRes = data.filter((FilterFunction<NginxLogInfo>) nginxLogInfo -> {
             if (null != nginxLogInfo) {
                 String code = nginxLogInfo.getCode();
                 if (CONSTANTS.NGINX_STATUS_SUCCESS_VALUE.equals(code)) {
@@ -95,15 +94,14 @@ public class NginxLogCostTimeStream {
             nginxLogCostTime.setTime(nginxLogInfo.getTime());
             nginxLogCostTime.setCostTime(nginxLogInfo.getCostTime());
             return nginxLogCostTime;
-        }).returns(TypeInformation.of(new TypeHint<NginxLogCostTime>() {})).setParallelism(reParallelism);
+        }).keyBy((KeySelector<NginxLogCostTime, String>) nginxLogCostTime -> nginxLogCostTime.getEvent())
+        //.assignTimestampsAndWatermarks(new NginxLogCostTimeWatermark())
+        .timeWindow(Time.seconds(parameterTool.getLong(CONFIGS.COST_TIME_TUMBLING_WINDOW_SIZE)));
 
-        DataStream<NginxLogCostTime> reduceRes = mapRes//.assignTimestampsAndWatermarks(new NginxLogCostTimeWatermark())
-                .timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.COST_TIME_TUMBLING_WINDOW_SIZE)))
-                //.allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.COST_TIME_MAX_ALLOWED_LATENESS)))
-                .reduce((ReduceFunction<NginxLogCostTime>) (d1, d2) -> {
-                    d1.setCostTime(d2.getCostTime());
-                    return d1;
-                }).returns(TypeInformation.of(new TypeHint<NginxLogCostTime>() {}));
+        DataStream<NginxLogCostTime> reduceRes = timeWindowRes.reduce((ReduceFunction<NginxLogCostTime>) (n1, n2) -> {
+            n1.setCostTime(n2.getCostTime());
+            return n1;
+        });
 
         reduceRes.addSink(new NginxLogCostTimeSink());
 
