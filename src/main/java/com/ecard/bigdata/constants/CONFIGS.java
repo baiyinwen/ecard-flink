@@ -32,10 +32,10 @@ public class CONFIGS {
 
     public final static String CONSUMER_FROM_TIME = "consumer.from.time";
 
-    public final static String SIGN_AMOUNT_KAFKA_TOPIC = "sign.amount.kafka.topic";
-    public final static String SIGN_AMOUNT_TUMBLING_WINDOW_SIZE = "sign.amount.tumbling.window.size";
-    public final static String SIGN_AMOUNT_MAX_OUT_OF_ORDER = "sign.amount.max.out.of.order";
-    public final static String SIGN_AMOUNT_MAX_ALLOWED_LATENESS = "sign.amount.max.allowed.lateness";
+    public final static String SIGN_COUNT_KAFKA_TOPIC = "sign.count.kafka.topic";
+    public final static String SIGN_COUNT_TUMBLING_WINDOW_SIZE = "sign.count.tumbling.window.size";
+    public final static String SIGN_COUNT_MAX_OUT_OF_ORDER = "sign.count.max.out.of.order";
+    public final static String SIGN_COUNT_MAX_ALLOWED_LATENESS = "sign.count.max.allowed.lateness";
 
     public final static String SIGN_ALTER_KAFKA_TOPIC = "sign.alter.kafka.topic";
     public final static String SIGN_ALTER_TUMBLING_WINDOW_SIZE = "sign.alter.tumbling.window.size";

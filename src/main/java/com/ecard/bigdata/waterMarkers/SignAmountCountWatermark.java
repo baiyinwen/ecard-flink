@@ -1,6 +1,6 @@
 package com.ecard.bigdata.waterMarkers;
 
-import com.ecard.bigdata.model.DataAnalysisSignAmount;
+import com.ecard.bigdata.model.SignAmount;
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
 import com.ecard.bigdata.utils.ConfigUtils;
@@ -17,17 +17,17 @@ import javax.annotation.Nullable;
  * @Date 2020/4/10 10:38
  * @Version 1.0
  **/
-public class DataAnalysisSignWatermark implements AssignerWithPeriodicWatermarks<DataAnalysisSignAmount> {
+public class SignAmountCountWatermark implements AssignerWithPeriodicWatermarks<SignAmount> {
 
-    private static Logger logger = LoggerFactory.getLogger(DataAnalysisSignWatermark.class);
+    private static Logger logger = LoggerFactory.getLogger(SignAmountCountWatermark.class);
 
-    private final long maxOutOfOrder  = ConfigUtils.getLong(CONFIGS.SIGN_AMOUNT_MAX_OUT_OF_ORDER);
+    private final long maxOutOfOrder  = ConfigUtils.getLong(CONFIGS.SIGN_COUNT_MAX_OUT_OF_ORDER);
     private long currentTimestamp = CONSTANTS.NUMBER_0;
 
     @Override
-    public long extractTimestamp(DataAnalysisSignAmount dataAnalysisSignAmount, long previousElementTimestamp) {
+    public long extractTimestamp(SignAmount signAmount, long previousElementTimestamp) {
 
-        long time = dataAnalysisSignAmount.getCollectTime().getTime();
+        long time = signAmount.getCollectTime().getTime();
         currentTimestamp = Math.max(time, currentTimestamp);
         return time;
     }

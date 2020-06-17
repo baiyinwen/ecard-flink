@@ -9,7 +9,7 @@ import java.sql.Timestamp;
  * @Date 2019/9/20 11:41
  * @Version 1.0
  **/
-public class DataAnalysisSignAmount implements Serializable {
+public class SignAmount implements Serializable {
 
     private int id;
     private Timestamp collectTime;
@@ -77,7 +77,7 @@ public class DataAnalysisSignAmount implements Serializable {
 
     @Override
     public String toString() {
-        return "DataAnalysisSignMin{" +
+        return "SignAmount{" +
                 "id=" + id +
                 ", collectTime=" + collectTime +
                 ", channelNo='" + channelNo + '\'' +

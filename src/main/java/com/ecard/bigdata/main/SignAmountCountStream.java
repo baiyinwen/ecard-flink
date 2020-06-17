@@ -5,11 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.ecard.bigdata.bean.JsonLogInfo;
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
-import com.ecard.bigdata.model.DataAnalysisSignAmount;
+import com.ecard.bigdata.model.SignAmount;
 import com.ecard.bigdata.schemas.JsonLogSchema;
-import com.ecard.bigdata.sink.DataAnalysisSignSink;
+import com.ecard.bigdata.sink.SignAmountCountSink;
 import com.ecard.bigdata.utils.*;
-import com.ecard.bigdata.waterMarkers.DataAnalysisSignWatermark;
+import com.ecard.bigdata.waterMarkers.SignAmountCountWatermark;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
@@ -34,9 +34,9 @@ import java.util.Properties;
  * @Date 2020/4/10 9:24
  * @Version 1.0
  **/
-public class DataAnalysisSignStream {
+public class SignAmountCountStream {
 
-    private static Logger logger = LoggerFactory.getLogger(DataAnalysisSignStream.class);
+    private static Logger logger = LoggerFactory.getLogger(SignAmountCountStream.class);
 
     /**
      * @Description
@@ -47,10 +47,10 @@ public class DataAnalysisSignStream {
      **/
     public static void main(String[] args) throws Exception {
 
-        final String ClassName = DataAnalysisSignStream.class.getSimpleName();
+        final String ClassName = SignAmountCountStream.class.getSimpleName();
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
-        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, CONFIGS.SIGN_AMOUNT_KAFKA_TOPIC, ClassName);
-        String topic  = parameterTool.get(CONFIGS.SIGN_AMOUNT_KAFKA_TOPIC);
+        String topic  = parameterTool.get(CONFIGS.SIGN_COUNT_KAFKA_TOPIC);
+        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, topic, ClassName);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
 
@@ -60,51 +60,51 @@ public class DataAnalysisSignStream {
 
         int reParallelism = (int) Math.ceil(parameterTool.getDouble(CONFIGS.STREAM_PARALLELISM)/2.0);
 
-        WindowedStream<DataAnalysisSignAmount, Tuple2<String, String>, TimeWindow> timeWindowRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
+        WindowedStream<SignAmount, Tuple2<String, String>, TimeWindow> timeWindowRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
                 String event = jsonLogInfo.getEvent();
                 JSONObject outputJson = JSON.parseObject(jsonLogInfo.getOutput().toString());
                 if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
                         && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
                     String md5Log = Md5Utils.encodeMd5(jsonLogInfo.getOrigLog());
-                    boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.SIGN_REDIS_LOG_MIN_MD5_KEY + md5Log);
+                    boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY + md5Log);
                     if (isMember) {
                         return false;
                     } else {
-                        RedisClusterUtils.setValue(CONSTANTS.SIGN_REDIS_LOG_MIN_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_MIN_MD5_KEY);
-                        RedisClusterUtils.setExpire(CONSTANTS.SIGN_REDIS_LOG_MIN_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_MIN_KEY_EXPIRE_SECONDS);
+                        RedisClusterUtils.setValue(CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY);
+                        RedisClusterUtils.setExpire(CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS);
                     }
                     return true;
                 }
             }
             return false;
-        }).map((MapFunction<JsonLogInfo, DataAnalysisSignAmount>) jsonLogInfo -> {
-            DataAnalysisSignAmount dataAnalysisSignAmount = new DataAnalysisSignAmount();
+        }).map((MapFunction<JsonLogInfo, SignAmount>) jsonLogInfo -> {
+            SignAmount signAmount = new SignAmount();
             JSONObject inputObj = JSONObject.parseObject(jsonLogInfo.getInput().toString());
-            dataAnalysisSignAmount.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
-            dataAnalysisSignAmount.setChannelNo(jsonLogInfo.getChannelNo());
-            dataAnalysisSignAmount.setCardRegionCode(inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_CARD_REGION_KEY));
-            dataAnalysisSignAmount.setTransferTimes(CONSTANTS.NUMBER_1);
-            return dataAnalysisSignAmount;
-        }).assignTimestampsAndWatermarks(new DataAnalysisSignWatermark()).setParallelism(reParallelism)
-          .keyBy(new KeySelector<DataAnalysisSignAmount, Tuple2<String, String>>() {
+            signAmount.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
+            signAmount.setChannelNo(jsonLogInfo.getChannelNo());
+            signAmount.setCardRegionCode(inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_CARD_REGION_KEY));
+            signAmount.setTransferTimes(CONSTANTS.NUMBER_1);
+            return signAmount;
+        }).assignTimestampsAndWatermarks(new SignAmountCountWatermark()).setParallelism(reParallelism)
+          .keyBy(new KeySelector<SignAmount, Tuple2<String, String>>() {
             @Override
-            public Tuple2<String, String> getKey(DataAnalysisSignAmount dataAnalysisSignMin) {
+            public Tuple2<String, String> getKey(SignAmount signAmount) {
                 Tuple2<String, String> tuple2 = new Tuple2<>();
-                tuple2.f0 = dataAnalysisSignMin.getChannelNo();
-                tuple2.f1 = dataAnalysisSignMin.getCardRegionCode();
+                tuple2.f0 = signAmount.getChannelNo();
+                tuple2.f1 = signAmount.getCardRegionCode();
                 return tuple2;
             }
-        }).timeWindow(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_AMOUNT_TUMBLING_WINDOW_SIZE)))
-          .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_AMOUNT_MAX_ALLOWED_LATENESS)));
+        }).timeWindow(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_COUNT_TUMBLING_WINDOW_SIZE)))
+          .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_COUNT_MAX_ALLOWED_LATENESS)));
 
-        DataStream<DataAnalysisSignAmount> reduceRes = timeWindowRes
-        .reduce((ReduceFunction<DataAnalysisSignAmount>) (d1, d2) -> {
-            d1.setTransferTimes(d1.getTransferTimes() + d2.getTransferTimes());
-            return d1;
+        DataStream<SignAmount> reduceRes = timeWindowRes
+        .reduce((ReduceFunction<SignAmount>) (s1, s2) -> {
+            s1.setTransferTimes(s1.getTransferTimes() + s2.getTransferTimes());
+            return s1;
         });
 
-        reduceRes.addSink(new DataAnalysisSignSink());
+        reduceRes.addSink(new SignAmountCountSink());
 
         env.execute(ClassName);
 

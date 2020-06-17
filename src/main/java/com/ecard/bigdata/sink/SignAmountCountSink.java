@@ -1,6 +1,6 @@
 package com.ecard.bigdata.sink;
 
-import com.ecard.bigdata.model.DataAnalysisSignAmount;
+import com.ecard.bigdata.model.SignAmount;
 import com.ecard.bigdata.utils.DateTimeUtils;
 import com.ecard.bigdata.utils.TBaseUtils;
 import org.apache.flink.configuration.Configuration;
@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
  * @Date 2020/4/24 14:59
  * @Version 1.0
  **/
-public class DataAnalysisSignSink extends RichSinkFunction<DataAnalysisSignAmount> {
+public class SignAmountCountSink extends RichSinkFunction<SignAmount> {
 
-    private static Logger logger = LoggerFactory.getLogger(DataAnalysisSignSink.class);
+    private static Logger logger = LoggerFactory.getLogger(SignAmountCountSink.class);
 
     private TBaseUtils tBaseUtils;
 
@@ -34,22 +34,22 @@ public class DataAnalysisSignSink extends RichSinkFunction<DataAnalysisSignAmoun
     }
 
     @Override
-    public void invoke(DataAnalysisSignAmount dataAnalysisSignAmount, Context context) {
+    public void invoke(SignAmount signAmount, Context context) {
 
-        saveDataAnalysisSignMin(dataAnalysisSignAmount);
+        saveSignAmountCount(signAmount);
     }
 
-    private void saveDataAnalysisSignMin(DataAnalysisSignAmount dataAnalysisSignAmount) {
+    private void saveSignAmountCount(SignAmount signAmount) {
 
-        dataAnalysisSignAmount.setCollectTime(DateTimeUtils.getIntervalBasicTime(dataAnalysisSignAmount.getCollectTime().getTime()));
+        signAmount.setCollectTime(DateTimeUtils.getIntervalBasicTime(signAmount.getCollectTime().getTime()));
         String sql = "INSERT INTO data_analysis_sign_min(COLLECT_TIME, CHANNEL_NO, CARD_REGION_CODE, TRANSFER_TIMES)" +
                 " VALUES(?, ?, ?, ?) ";
         Object[] params = new Object[]{
-                dataAnalysisSignAmount.getCollectTime(),
-                dataAnalysisSignAmount.getChannelNo(),
-                dataAnalysisSignAmount.getCardRegionCode(),
-                dataAnalysisSignAmount.getTransferTimes()};
-        logger.info("ready to save -- " + dataAnalysisSignAmount.toString());
+                signAmount.getCollectTime(),
+                signAmount.getChannelNo(),
+                signAmount.getCardRegionCode(),
+                signAmount.getTransferTimes()};
+        logger.info("ready to save -- " + signAmount.toString());
         tBaseUtils.executeUpdate(sql, params);
     }
 

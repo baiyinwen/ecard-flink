@@ -49,8 +49,8 @@ public class NginxLogCostTimeStream {
 
         final String ClassName = NginxLogCostTimeStream.class.getSimpleName();
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
-        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, CONFIGS.COST_TIME_KAFKA_TOPIC, ClassName);
         String topic  = parameterTool.get(CONFIGS.COST_TIME_KAFKA_TOPIC);
+        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, topic, ClassName);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
         env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);

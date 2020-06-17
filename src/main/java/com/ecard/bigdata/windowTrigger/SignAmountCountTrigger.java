@@ -11,7 +11,7 @@ import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
  * @Date 2020/4/27 9:27
  * @Version 1.0
  **/
-public class DataAnalysisSignTrigger extends Trigger<JsonLogInfo, TimeWindow> {
+public class SignAmountCountTrigger extends Trigger<JsonLogInfo, TimeWindow> {
 
     @Override
     public TriggerResult onElement(JsonLogInfo jsonLogInfo, long l, TimeWindow timeWindow, TriggerContext triggerContext) throws Exception {

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ecard.bigdata.bean.JsonLogInfo;
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
-import com.ecard.bigdata.model.DataAnalysisSignAmount;
+import com.ecard.bigdata.model.SignAmount;
 import com.ecard.bigdata.schemas.JsonLogSchema;
 import com.ecard.bigdata.sink.SignAmountAlterSink;
 import com.ecard.bigdata.utils.*;
@@ -47,8 +47,8 @@ public class SignAmountAlterStream {
 
         final String ClassName = SignAmountAlterStream.class.getSimpleName();
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
-        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, CONFIGS.SIGN_ALTER_KAFKA_TOPIC, ClassName);
         String topic  = parameterTool.get(CONFIGS.SIGN_ALTER_KAFKA_TOPIC);
+        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, topic, ClassName);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
 
@@ -59,7 +59,7 @@ public class SignAmountAlterStream {
 
         int reParallelism = (int) Math.ceil(parameterTool.getDouble(CONFIGS.STREAM_PARALLELISM)/2.0);
 
-        DataStream<DataAnalysisSignAmount> mapRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
+        DataStream<SignAmount> mapRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
                 String event = jsonLogInfo.getEvent();
                 JSONObject outputJson = JSON.parseObject(jsonLogInfo.getOutput().toString());
@@ -77,20 +77,20 @@ public class SignAmountAlterStream {
                 }
             }
             return false;
-        }).map((MapFunction<JsonLogInfo, DataAnalysisSignAmount>) jsonLogInfo -> {
-            DataAnalysisSignAmount dataAnalysisSignAmount = new DataAnalysisSignAmount();
-            dataAnalysisSignAmount.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
-            dataAnalysisSignAmount.setTransferTimes(CONSTANTS.NUMBER_1);
-            return dataAnalysisSignAmount;
-        }).returns(TypeInformation.of(new TypeHint<DataAnalysisSignAmount>() {})).setParallelism(reParallelism);
+        }).map((MapFunction<JsonLogInfo, SignAmount>) jsonLogInfo -> {
+            SignAmount signAmount = new SignAmount();
+            signAmount.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
+            signAmount.setTransferTimes(CONSTANTS.NUMBER_1);
+            return signAmount;
+        }).returns(TypeInformation.of(new TypeHint<SignAmount>() {})).setParallelism(reParallelism);
 
-        DataStream<DataAnalysisSignAmount> reduceRes = mapRes.assignTimestampsAndWatermarks(new SignAmountAlterWatermark())
+        DataStream<SignAmount> reduceRes = mapRes.assignTimestampsAndWatermarks(new SignAmountAlterWatermark())
                 .timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_ALTER_TUMBLING_WINDOW_SIZE)))
                 .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_ALTER_MAX_ALLOWED_LATENESS)))
-                .reduce((ReduceFunction<DataAnalysisSignAmount>) (d1, d2) -> {
-                    d1.setTransferTimes(d1.getTransferTimes() + d2.getTransferTimes());
-                    return d1;
-                }).returns(TypeInformation.of(new TypeHint<DataAnalysisSignAmount>() {}));
+                .reduce((ReduceFunction<SignAmount>) (s1, s2) -> {
+                    s1.setTransferTimes(s1.getTransferTimes() + s2.getTransferTimes());
+                    return s1;
+                }).returns(TypeInformation.of(new TypeHint<SignAmount>() {}));
 
         reduceRes.addSink(new SignAmountAlterSink());
 

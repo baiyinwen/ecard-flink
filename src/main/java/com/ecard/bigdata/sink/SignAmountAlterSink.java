@@ -1,7 +1,7 @@
 package com.ecard.bigdata.sink;
 
 import com.ecard.bigdata.constants.CONSTANTS;
-import com.ecard.bigdata.model.DataAnalysisSignAmount;
+import com.ecard.bigdata.model.SignAmount;
 import com.ecard.bigdata.utils.PushToFalconUtils;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * @Date 2020/4/24 14:59
  * @Version 1.0
  **/
-public class SignAmountAlterSink extends RichSinkFunction<DataAnalysisSignAmount> {
+public class SignAmountAlterSink extends RichSinkFunction<SignAmount> {
 
     private static Logger logger = LoggerFactory.getLogger(SignAmountAlterSink.class);
 
@@ -23,7 +23,7 @@ public class SignAmountAlterSink extends RichSinkFunction<DataAnalysisSignAmount
     private static String endpoint = "endpoint_data_sign_alter";
     private static int step = 60;
     private static String counterType = "GAUGE";
-    private static String tags = "type=sign,value=amount";
+    private static String tags = "type=sign_alter,value=amount";
 
     @Override
     public void open(Configuration parameters) throws Exception {
@@ -39,17 +39,17 @@ public class SignAmountAlterSink extends RichSinkFunction<DataAnalysisSignAmount
     }
 
     @Override
-    public void invoke(DataAnalysisSignAmount dataAnalysisSignAmount, Context context) {
+    public void invoke(SignAmount signAmount, Context context) {
 
-        pushDataAnalysisSignMin(dataAnalysisSignAmount);
+        pushSignAmountAlter(signAmount);
     }
 
-    private void pushDataAnalysisSignMin(DataAnalysisSignAmount dataAnalysisSignAmount) {
+    private void pushSignAmountAlter(SignAmount signAmount) {
 
         String metric = CONSTANTS.EVENT_ESSC_LOG_SIGN;
-        long timestamp = dataAnalysisSignAmount.getCollectTime().getTime();
-        float value = dataAnalysisSignAmount.getTransferTimes();
-        logger.info("ready to push -- " + dataAnalysisSignAmount.toString());
+        long timestamp = signAmount.getCollectTime().getTime();
+        float value = signAmount.getTransferTimes();
+        logger.info("ready to push -- " + signAmount.toString());
         pushToFalconUtils.sendInfoToFalcon(endpoint, metric, timestamp, step, value, counterType, tags);
     }
 

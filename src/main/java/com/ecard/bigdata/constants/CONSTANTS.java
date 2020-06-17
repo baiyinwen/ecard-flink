@@ -29,8 +29,8 @@ public class CONSTANTS {
 
     public final static String NGINX_STATUS_SUCCESS_VALUE = "200";
 
-    public final static String SIGN_REDIS_LOG_MIN_MD5_KEY = "signLogMinMd5";
-    public final static int SIGN_REDIS_LOG_MIN_KEY_EXPIRE_SECONDS = 86400;
+    public final static String SIGN_REDIS_LOG_COUNT_MD5_KEY = "signLogCountMd5";
+    public final static int SIGN_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS = 86400;
     public final static String SIGN_REDIS_LOG_ALTER_MD5_KEY = "signLogAlterMd5";
     public final static int SIGN_REDIS_LOG_ALTER_KEY_EXPIRE_SECONDS = 86400;
     public final static String COST_TIME_REDIS_LOG_MD5_KEY = "costTimeLogMd5";
