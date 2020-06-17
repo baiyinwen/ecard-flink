@@ -96,7 +96,7 @@ public class DateTimeUtils {
 
 	public static Timestamp getIntervalBasicTime(long eventTime){
 
-		long interval = ConfigUtils.getLong(CONFIGS.SIGN_TUMBLING_WINDOW_SIZE) * 1000;
+		long interval = ConfigUtils.getLong(CONFIGS.SIGN_COUNT_TUMBLING_WINDOW_SIZE) * 1000;
 		long basicDateTime = eventTime;
 		if (interval < 60*60*1000) {
 			basicDateTime = basicDateTime - basicDateTime % interval;
