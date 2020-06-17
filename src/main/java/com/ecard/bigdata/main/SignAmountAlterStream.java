@@ -94,7 +94,7 @@ public class SignAmountAlterStream {
 
         reduceRes.addSink(new SignAmountAlterSink());
 
-        env.execute(SignAmountAlterStream.class.getName());
+        env.execute(ClassName);
 
     }
 
