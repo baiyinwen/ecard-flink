@@ -13,6 +13,8 @@ import com.ecard.bigdata.waterMarkers.SignAmountCountWatermark;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
+import org.apache.flink.api.common.typeinfo.TypeHint;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
@@ -86,7 +88,7 @@ public class SignAmountCountStream {
             signAmount.setCardRegionCode(inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_CARD_REGION_KEY));
             signAmount.setTransferTimes(CONSTANTS.NUMBER_1);
             return signAmount;
-        }).assignTimestampsAndWatermarks(new SignAmountCountWatermark()).setParallelism(reParallelism)
+        }).returns(TypeInformation.of(new TypeHint<SignAmount>() {})).assignTimestampsAndWatermarks(new SignAmountCountWatermark()).setParallelism(reParallelism)
           .keyBy(new KeySelector<SignAmount, Tuple2<String, String>>() {
             @Override
             public Tuple2<String, String> getKey(SignAmount signAmount) {

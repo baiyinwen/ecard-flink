@@ -234,7 +234,7 @@ public class TBaseUtils {
         String sql = "INSERT INTO data_analysis_sign_min(COLLECT_TIME, CHANNEL_NO, CARD_REGION_CODE, TRANSFER_TIMES)" +
                 " VALUES(?, ?, ?, ?) ";
         Object[] params = new Object[]{
-                DateTimeUtils.getIntervalBasicTime(new Date().getTime()),
+                DateTimeUtils.getIntervalBasicTime(new Date().getTime(), 60),
                 "0000000",
                 "0100",
                 22};

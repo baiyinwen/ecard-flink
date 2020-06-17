@@ -1,6 +1,8 @@
 package com.ecard.bigdata.sink;
 
+import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.model.NginxLogCostTime;
+import com.ecard.bigdata.utils.ConfigUtils;
 import com.ecard.bigdata.utils.DateTimeUtils;
 import com.ecard.bigdata.utils.PushToFalconUtils;
 import org.apache.flink.configuration.Configuration;
@@ -46,7 +48,7 @@ public class NginxLogCostTimeSink extends RichSinkFunction<NginxLogCostTime> {
 
     private void pushNginxLogCostTime(NginxLogCostTime nginxLogCostTime) {
 
-        nginxLogCostTime.setTime(DateTimeUtils.getIntervalBasicTime(nginxLogCostTime.getTime()).getTime());
+        nginxLogCostTime.setTime(DateTimeUtils.getIntervalBasicTime(nginxLogCostTime.getTime(), ConfigUtils.getLong(CONFIGS.COST_TIME_TUMBLING_WINDOW_SIZE)).getTime());
         //目前统一服务器，以后会分nginx服务器，即:IP+endpoint
         String pushEndpoint = endpoint;
         String metric = nginxLogCostTime.getEvent();

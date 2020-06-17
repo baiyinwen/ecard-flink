@@ -43,7 +43,7 @@ public class KafkaConfigUtils {
         props.put("zookeeper.connect", parameterTool.get(CONFIGS.ZOOKEEPER_SERVERS));
         props.put("bootstrap.servers", parameterTool.get(CONFIGS.KAFKA_BROKERS));
 
-        props.put("group.id", parameterTool.get(kafkaTopic) + "_" + KafkaGroup);
+        props.put("group.id", kafkaTopic + "_" + KafkaGroup);
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("auto.offset.reset", "earliest");

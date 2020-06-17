@@ -1,7 +1,10 @@
 package com.ecard.bigdata.sink;
 
+import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
 import com.ecard.bigdata.model.SignAmount;
+import com.ecard.bigdata.utils.ConfigUtils;
+import com.ecard.bigdata.utils.DateTimeUtils;
 import com.ecard.bigdata.utils.PushToFalconUtils;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
@@ -46,6 +49,7 @@ public class SignAmountAlterSink extends RichSinkFunction<SignAmount> {
 
     private void pushSignAmountAlter(SignAmount signAmount) {
 
+        signAmount.setCollectTime(DateTimeUtils.getIntervalBasicTime(signAmount.getCollectTime().getTime(), ConfigUtils.getLong(CONFIGS.SIGN_ALTER_TUMBLING_WINDOW_SIZE)));
         String metric = CONSTANTS.EVENT_ESSC_LOG_SIGN;
         long timestamp = signAmount.getCollectTime().getTime();
         float value = signAmount.getTransferTimes();
