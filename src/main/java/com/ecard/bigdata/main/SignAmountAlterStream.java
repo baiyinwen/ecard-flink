@@ -92,7 +92,7 @@ public class SignAmountAlterStream {
                     return s1;
                 }).returns(TypeInformation.of(new TypeHint<SignAmount>() {}));
 
-        reduceRes.addSink(new SignAmountAlterSink());
+        reduceRes.addSink(new SignAmountAlterSink()).name(SignAmountAlterSink.class.getSimpleName());
 
         env.execute(ClassName);
 

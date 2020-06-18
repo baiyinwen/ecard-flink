@@ -113,7 +113,7 @@ public class SignAmountCountStream {
             return s1;
         });
 
-        reduceRes.addSink(new SignAmountCountSink());
+        reduceRes.addSink(new SignAmountCountSink()).name(SignAmountCountSink.class.getSimpleName());
 
         env.execute(ClassName);
 
