@@ -83,9 +83,16 @@ public class SignAmountCountStream {
         }).map((MapFunction<JsonLogInfo, SignAmount>) jsonLogInfo -> {
             SignAmount signAmount = new SignAmount();
             JSONObject inputObj = JSONObject.parseObject(jsonLogInfo.getInput().toString());
+            String cardRegionCode = inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_AAB_301);
+            if (null == cardRegionCode || cardRegionCode.trim().isEmpty()) {
+                cardRegionCode = inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_SIGN_SEQ);
+                if (null != cardRegionCode && !cardRegionCode.trim().isEmpty()) {
+                    cardRegionCode = cardRegionCode.substring(cardRegionCode.length()-6);
+                }
+            }
             signAmount.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
             signAmount.setChannelNo(jsonLogInfo.getChannelNo());
-            signAmount.setCardRegionCode(inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_CARD_REGION_KEY));
+            signAmount.setCardRegionCode(cardRegionCode);
             signAmount.setTransferTimes(CONSTANTS.NUMBER_1);
             return signAmount;
         }).returns(TypeInformation.of(new TypeHint<SignAmount>() {})).assignTimestampsAndWatermarks(new SignAmountCountWatermark()).setParallelism(reParallelism)

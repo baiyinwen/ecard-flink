@@ -25,7 +25,8 @@ public class CONSTANTS {
     public final static String EVENT_MSG_CODE_KEY = "msgCode";
     public final static String EVENT_MSG_CODE_VALUE = "000000";
     public final static String EVENT_ESSC_LOG_SIGN = "essc_log_sign";//签发日志的event
-    public final static String EVENT_ESSC_LOG_SIGN_CARD_REGION_KEY = "aab301";//签发日志中签发地区行政划分码
+    public final static String EVENT_ESSC_LOG_SIGN_AAB_301 = "aab301";//签发日志中签发地区行政划分码
+    public final static String EVENT_ESSC_LOG_SIGN_SIGN_SEQ = "signSeq";//后六位签发日志中签发地区行政划分码
 
     public final static String NGINX_STATUS_SUCCESS_VALUE = "200";
 
