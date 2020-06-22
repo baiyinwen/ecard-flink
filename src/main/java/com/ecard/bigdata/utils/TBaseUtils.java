@@ -46,6 +46,7 @@ public class TBaseUtils {
             TBASE_JDBC_USER = ConfigUtils.getString(CONFIGS.TBASE_JDBC_USER);
             TBASE_JDBC_PASSWORD = ConfigUtils.getString(CONFIGS.TBASE_JDBC_PASSWORD);
         } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         }
     }
@@ -84,6 +85,7 @@ public class TBaseUtils {
                 connection = druidDataSource.getConnection();
             }
         } catch (Exception exception) {
+            logger.error(exception.getMessage());
             exception.printStackTrace();
         }
         logger.info("get connection -- " + connection);
@@ -97,6 +99,7 @@ public class TBaseUtils {
                 connection.close();
             }
         } catch (SQLException throwables) {
+            logger.error(throwables.getMessage());
             throwables.printStackTrace();
         }
     }
@@ -118,6 +121,7 @@ public class TBaseUtils {
             rs = pst.executeQuery();
             callback.process(rs);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         } finally {
             if (rs != null) {
@@ -159,6 +163,7 @@ public class TBaseUtils {
             rtn = pst.executeUpdate();
             conn.commit();
         } catch (Exception e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         } finally {
             if (pst != null) {
@@ -199,6 +204,7 @@ public class TBaseUtils {
             rtn = pst.executeBatch();
             conn.commit();
         } catch (Exception e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         } finally {
             if (pst != null) {

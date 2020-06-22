@@ -16,11 +16,12 @@ public class ExecutionEnvUtils {
 
     private static int RESTART_ATTEMPTS = 5;
     private static int DELAY_BETWEEN_ATTEMPTS = 6000;
+    private static int STREAM_PARALLELISM = 3;
 
     public static StreamExecutionEnvironment prepare(ParameterTool parameterTool) {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         //设置并行度
-        env.setParallelism(parameterTool.getInt(CONFIGS.STREAM_PARALLELISM));
+        env.setParallelism(STREAM_PARALLELISM);
         env.getConfig().disableSysoutLogging();
         //设置重试机制：重试次数，重试间隔
         env.getConfig().setRestartStrategy(RestartStrategies.fixedDelayRestart(RESTART_ATTEMPTS, DELAY_BETWEEN_ATTEMPTS));

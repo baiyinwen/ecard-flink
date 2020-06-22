@@ -57,12 +57,15 @@ public class SignAmountAlterStream {
         consumer.setStartFromLatest();
         DataStreamSource<JsonLogInfo> data = env.addSource(consumer);
 
-        int reParallelism = (int) Math.ceil(parameterTool.getDouble(CONFIGS.STREAM_PARALLELISM)/2.0);
-
         DataStream<SignAmount> mapRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
                 String event = jsonLogInfo.getEvent();
-                JSONObject outputJson = JSON.parseObject(jsonLogInfo.getOutput().toString());
+                String inputStr = jsonLogInfo.getInput().toString();
+                String outputStr = jsonLogInfo.getOutput().toString();
+                if (!JsonUtils.isJsonObject(inputStr) && !JsonUtils.isJsonObject(outputStr)) {
+                    return false;
+                }
+                JSONObject outputJson = JSON.parseObject(outputStr);
                 if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
                         && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
                     String md5Log = Md5Utils.encodeMd5(jsonLogInfo.getOrigLog());
@@ -82,7 +85,7 @@ public class SignAmountAlterStream {
             signAmount.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
             signAmount.setTransferTimes(CONSTANTS.NUMBER_1);
             return signAmount;
-        }).returns(TypeInformation.of(new TypeHint<SignAmount>() {})).setParallelism(reParallelism);
+        }).returns(TypeInformation.of(new TypeHint<SignAmount>() {})).setParallelism(1);
 
         DataStream<SignAmount> reduceRes = mapRes.assignTimestampsAndWatermarks(new SignAmountAlterWatermark())
                 .timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_ALTER_TUMBLING_WINDOW_SIZE)))

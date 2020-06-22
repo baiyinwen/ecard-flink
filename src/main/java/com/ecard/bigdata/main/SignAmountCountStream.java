@@ -60,12 +60,15 @@ public class SignAmountCountStream {
         FlinkKafkaConsumer010<JsonLogInfo> consumer = new FlinkKafkaConsumer010<>(topic, jsonLogSchema, props);
         DataStreamSource<JsonLogInfo> data = env.addSource(consumer);
 
-        int reParallelism = (int) Math.ceil(parameterTool.getDouble(CONFIGS.STREAM_PARALLELISM)/2.0);
-
         WindowedStream<SignAmount, Tuple2<String, String>, TimeWindow> timeWindowRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
                 String event = jsonLogInfo.getEvent();
-                JSONObject outputJson = JSON.parseObject(jsonLogInfo.getOutput().toString());
+                String inputStr = jsonLogInfo.getInput().toString();
+                String outputStr = jsonLogInfo.getOutput().toString();
+                if (!JsonUtils.isJsonObject(inputStr) && !JsonUtils.isJsonObject(outputStr)) {
+                    return false;
+                }
+                JSONObject outputJson = JSON.parseObject(outputStr);
                 if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
                         && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
                     String md5Log = Md5Utils.encodeMd5(jsonLogInfo.getOrigLog());
@@ -95,7 +98,7 @@ public class SignAmountCountStream {
             signAmount.setCardRegionCode(cardRegionCode);
             signAmount.setTransferTimes(CONSTANTS.NUMBER_1);
             return signAmount;
-        }).returns(TypeInformation.of(new TypeHint<SignAmount>() {})).assignTimestampsAndWatermarks(new SignAmountCountWatermark()).setParallelism(reParallelism)
+        }).returns(TypeInformation.of(new TypeHint<SignAmount>() {})).assignTimestampsAndWatermarks(new SignAmountCountWatermark()).setParallelism(1)
           .keyBy(new KeySelector<SignAmount, Tuple2<String, String>>() {
             @Override
             public Tuple2<String, String> getKey(SignAmount signAmount) {

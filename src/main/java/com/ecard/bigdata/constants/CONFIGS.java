@@ -25,8 +25,6 @@ public class CONFIGS {
 
     public final static String KAFKA_SASL_ENABLE = "kafka.sasl.enable";
 
-    public final static String STREAM_PARALLELISM = "stream.parallelism";
-
     public final static String SASL_TBDS_SECURE_ID = "sasl.tbds.secure.id";
     public final static String SASL_TBDS_SECURE_KEY = "sasl.tbds.secure.key";
 

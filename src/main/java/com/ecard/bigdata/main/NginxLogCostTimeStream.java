@@ -62,8 +62,6 @@ public class NginxLogCostTimeStream {
         consumer.setStartFromLatest();//设置从最新位置开始消费
         DataStreamSource<NginxLogInfo> data = env.addSource(consumer);
 
-        int reParallelism = (int) Math.ceil(parameterTool.getDouble(CONFIGS.STREAM_PARALLELISM)/2.0);
-
         WindowedStream<NginxLogCostTime, String, TimeWindow> timeWindowRes = data.filter((FilterFunction<NginxLogInfo>) nginxLogInfo -> {
             if (null != nginxLogInfo) {
                 String code = nginxLogInfo.getCode();
@@ -99,7 +97,7 @@ public class NginxLogCostTimeStream {
             nginxLogCostTime.setTime(nginxLogInfo.getTime());
             nginxLogCostTime.setCostTime(nginxLogInfo.getCostTime());
             return nginxLogCostTime;
-        }).returns(TypeInformation.of(new TypeHint<NginxLogCostTime>() {})).setParallelism(reParallelism)
+        }).returns(TypeInformation.of(new TypeHint<NginxLogCostTime>() {})).setParallelism(1)
         .keyBy(new KeySelector<NginxLogCostTime, String>() {
             @Override
             public String getKey(NginxLogCostTime nginxLogCostTime) {
