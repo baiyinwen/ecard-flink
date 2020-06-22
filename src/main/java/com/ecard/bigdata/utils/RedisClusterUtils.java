@@ -21,11 +21,11 @@ public class RedisClusterUtils {
     private static JedisCluster jedisCluster = null;
 
     private static String [] REDIS_HOSTS;
-    private static int REDIS_PORT;
     private static String REDIS_PASSWORD;
+    private static int REDIS_PORT = 6379;
 
-    private static int REDIS_MAX_TOTAL = 8;
-    private static int REDIS_MAX_IDLE = 3;
+    private static int REDIS_MAX_TOTAL = 10;
+    private static int REDIS_MAX_IDLE = 5;
     private static int REDIS_MIN_IDLE = 1;
     private static boolean REDIS_BLOCK_WHEN_EXHAUSTED = true;
     private static int REDIS_MAX_WAIT_MILLIS = 10;
@@ -40,7 +40,6 @@ public class RedisClusterUtils {
     static {
         try {
             REDIS_HOSTS = ConfigUtils.getString(CONFIGS.REDIS_HOSTS).split(",");
-            REDIS_PORT = ConfigUtils.getInteger(CONFIGS.REDIS_PORT);
             REDIS_PASSWORD = ConfigUtils.getString(CONFIGS.REDIS_PASSWORD);
 
             Set<HostAndPort> hostAndPortsSet = new HashSet<>();

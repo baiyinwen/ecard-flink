@@ -18,7 +18,6 @@ public class CONFIGS {
 
     /*redis参数*/
     public final static String REDIS_HOSTS = "redis.hosts";
-    public final static String REDIS_PORT = "redis.port";
     public final static String REDIS_PASSWORD = "redis.password";
 
     public final static String OPEN_FALCON_PUSH_URL = "open.falcon.push.url";
