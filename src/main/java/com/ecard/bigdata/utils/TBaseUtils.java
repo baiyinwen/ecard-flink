@@ -33,9 +33,9 @@ public class TBaseUtils {
     private static String TBASE_JDBC_USER;
     private static String TBASE_JDBC_PASSWORD;
 
-    private static int TBASE_JDBC_INITIAL_SIZE = 5;
-    private static int TBASE_JDBC_MAX_ACTIVE = 10;
-    private static int TBASE_JDBC_MIN_IDLE = 3;
+    private static int TBASE_JDBC_INITIAL_SIZE = 10;
+    private static int TBASE_JDBC_MAX_ACTIVE = 16;
+    private static int TBASE_JDBC_MIN_IDLE = 5;
     private static int TBASE_JDBC_MAX_WAIT = 100;
 
     static {
