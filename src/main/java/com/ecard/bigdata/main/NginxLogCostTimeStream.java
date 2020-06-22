@@ -4,7 +4,6 @@ import com.ecard.bigdata.bean.NginxLogInfo;
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
 import com.ecard.bigdata.model.NginxLogCostTime;
-import com.ecard.bigdata.model.SignAmount;
 import com.ecard.bigdata.schemas.NginxLogSchema;
 import com.ecard.bigdata.sink.NginxLogCostTimeSink;
 import com.ecard.bigdata.utils.*;
@@ -94,7 +93,6 @@ public class NginxLogCostTimeStream {
             }
             return false;
         }).map((MapFunction<NginxLogInfo, NginxLogCostTime>) nginxLogInfo -> {
-            logger.info("map logs --- " + nginxLogInfo.toString());
             NginxLogCostTime nginxLogCostTime = new NginxLogCostTime();
             nginxLogCostTime.setIp(nginxLogInfo.getIp());
             nginxLogCostTime.setEvent(nginxLogInfo.getEvent());

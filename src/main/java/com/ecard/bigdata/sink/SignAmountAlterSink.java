@@ -26,7 +26,7 @@ public class SignAmountAlterSink extends RichSinkFunction<SignAmount> {
     private static String endpoint = "endpoint_data_sign_alter";
     private static int step = 60;
     private static String counterType = "GAUGE";
-    private static String tags = "type=sign_alter,value=amount";
+    private static String tags = "type=sign,value=amount";
 
     @Override
     public void open(Configuration parameters) throws Exception {
