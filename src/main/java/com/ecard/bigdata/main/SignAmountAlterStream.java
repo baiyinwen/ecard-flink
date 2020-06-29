@@ -48,7 +48,8 @@ public class SignAmountAlterStream {
         final String ClassName = SignAmountAlterStream.class.getSimpleName();
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
         String topic  = parameterTool.get(CONFIGS.SIGN_ALTER_KAFKA_TOPIC);
-        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, topic, ClassName);
+        String KafkaGroupId = topic + "_" + ClassName;
+        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, KafkaGroupId);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
 
