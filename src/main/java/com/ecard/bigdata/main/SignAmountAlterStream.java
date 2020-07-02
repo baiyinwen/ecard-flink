@@ -35,6 +35,7 @@ import java.util.Properties;
 public class SignAmountAlterStream {
 
     private static Logger logger = LoggerFactory.getLogger(SignAmountAlterStream.class);
+    private static final String ClassName = SignAmountAlterStream.class.getSimpleName();
 
     /**
      * @Description
@@ -45,10 +46,9 @@ public class SignAmountAlterStream {
      **/
     public static void main(String[] args) throws Exception {
 
-        final String ClassName = SignAmountAlterStream.class.getSimpleName();
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
         String topic  = parameterTool.get(CONFIGS.SIGN_ALTER_KAFKA_TOPIC);
-        String KafkaGroupId = topic + "_" + ClassName;
+        final String KafkaGroupId = topic + "_" + ClassName;
         Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, KafkaGroupId);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);

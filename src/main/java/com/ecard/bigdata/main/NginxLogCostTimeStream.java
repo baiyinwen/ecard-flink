@@ -39,6 +39,7 @@ import java.util.Properties;
 public class NginxLogCostTimeStream {
 
     private static Logger logger = LoggerFactory.getLogger(NginxLogCostTimeStream.class);
+    private static final String ClassName = NginxLogCostTimeStream.class.getSimpleName();
 
     /**
      * @Description
@@ -49,10 +50,9 @@ public class NginxLogCostTimeStream {
      **/
     public static void main(String[] args) throws Exception {
 
-        final String ClassName = NginxLogCostTimeStream.class.getSimpleName();
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
         String topic  = parameterTool.get(CONFIGS.COST_TIME_KAFKA_TOPIC);
-        String KafkaGroupId = topic + "_" + ClassName;
+        final String KafkaGroupId = topic + "_" + ClassName;
         Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, KafkaGroupId);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);

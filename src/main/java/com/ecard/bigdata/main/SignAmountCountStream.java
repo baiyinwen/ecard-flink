@@ -39,6 +39,7 @@ import java.util.Properties;
 public class SignAmountCountStream {
 
     private static Logger logger = LoggerFactory.getLogger(SignAmountCountStream.class);
+    private static final String ClassName = SignAmountCountStream.class.getSimpleName();
 
     /**
      * @Description
@@ -49,10 +50,9 @@ public class SignAmountCountStream {
      **/
     public static void main(String[] args) throws Exception {
 
-        final String ClassName = SignAmountCountStream.class.getSimpleName();
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
         String topic  = parameterTool.get(CONFIGS.SIGN_COUNT_KAFKA_TOPIC);
-        String KafkaGroupId = topic + "_" + ClassName;
+        final String KafkaGroupId = topic + "_" + ClassName;
         Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, KafkaGroupId);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
