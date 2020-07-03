@@ -17,7 +17,7 @@ public class ExecutionEnvUtils {
     private static int RESTART_ATTEMPTS = 5;
     private static long DELAY_BETWEEN_ATTEMPTS = 6000;
     private static int STREAM_PARALLELISM = 3;
-    private static boolean STREAM_CHECKPOINT_ENABLE = false;
+    private static boolean STREAM_CHECKPOINT_ENABLE = true;
     private static long STREAM_CHECKPOINT_INTERVAL = 60000;
     private static CheckpointingMode STREAM_CHECKPOINT_MODE = CheckpointingMode.EXACTLY_ONCE;
 
