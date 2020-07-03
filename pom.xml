@@ -4,11 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ecard-flink</groupId>
+    <groupId>com.esscard.bigdata</groupId>
     <artifactId>ecard-flink</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <!--运行环境：本地-dev、测试-pre、生产-pro-->
+        <execute.env>pro</execute.env>
         <scala.binary.version>2.11</scala.binary.version>
         <flink.version>1.7.0</flink.version>
         <tbds.flink.version>1.7-tdflink-0.1.1</tbds.flink.version>
@@ -111,12 +113,21 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
+                <!--打开预加载-->
+                <filtering>true</filtering>
                 <excludes>
                     <!--排除资源文件-->
-                    <!--<exclude>**/hive-sql/**</exclude>-->
+                    <exclude>**/tbase/**</exclude>
+                    <exclude>**/dev/**</exclude>
+                    <exclude>**/pre/**</exclude>
+                    <exclude>**/pro/**</exclude>
                 </excludes>
             </resource>
         </resources>
+        <filters>
+            <!--预加载资源文件-->
+            <filter>src/main/resources/${execute.env}/ecard-flink.properties</filter>
+        </filters>
         <plugins>
             <plugin>
                 <!-- 编译java代码 -->

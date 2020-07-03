@@ -23,8 +23,10 @@ public class ConfigUtils {
     static {
         try {
             //读取resources资源文件下配置文件
-            InputStream in = ConfigUtils.class.getClassLoader().getResourceAsStream(CONSTANTS.ECARD_FLINK_CONFIG_FILE);
-            prop.load(in);
+            InputStream in1 = ConfigUtils.class.getClassLoader().getResourceAsStream(CONSTANTS.ECARD_FLINK_CONFIG_FILE);
+            InputStream in2 = ConfigUtils.class.getClassLoader().getResourceAsStream(CONSTANTS.APPLICATION_CONFIG_FILE);
+            prop.load(in1);
+            prop.load(in2);
             logger.info("load config.properties --- " + prop.toString());
         } catch (IOException e) {
             e.printStackTrace();
