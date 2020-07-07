@@ -18,14 +18,11 @@ public class CONFIGS {
 
     /*redis参数*/
     public final static String REDIS_HOSTS = "redis.hosts";
-    public final static String REDIS_PORT = "redis.port";
     public final static String REDIS_PASSWORD = "redis.password";
 
     public final static String OPEN_FALCON_PUSH_URL = "open.falcon.push.url";
 
     public final static String KAFKA_SASL_ENABLE = "kafka.sasl.enable";
-
-    public final static String STREAM_PARALLELISM = "stream.parallelism";
 
     public final static String SASL_TBDS_SECURE_ID = "sasl.tbds.secure.id";
     public final static String SASL_TBDS_SECURE_KEY = "sasl.tbds.secure.key";

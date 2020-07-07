@@ -9,6 +9,7 @@ package com.ecard.bigdata.constants;
 public class CONSTANTS {
 
     public final static String ECARD_FLINK_CONFIG_FILE = "ecard-flink.properties";
+    public final static String APPLICATION_CONFIG_FILE = "application.properties";
 
     public final static String TBASE_JDBC_DRIVER = "org.postgresql.Driver";
 

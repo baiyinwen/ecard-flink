@@ -39,6 +39,7 @@ import java.util.Properties;
 public class NginxLogCostTimeStream {
 
     private static Logger logger = LoggerFactory.getLogger(NginxLogCostTimeStream.class);
+    private static final String ClassName = NginxLogCostTimeStream.class.getSimpleName();
 
     /**
      * @Description
@@ -49,10 +50,10 @@ public class NginxLogCostTimeStream {
      **/
     public static void main(String[] args) throws Exception {
 
-        final String ClassName = NginxLogCostTimeStream.class.getSimpleName();
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
         String topic  = parameterTool.get(CONFIGS.COST_TIME_KAFKA_TOPIC);
-        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, topic, ClassName);
+        final String KafkaGroupId = topic + "_" + ClassName;
+        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, KafkaGroupId);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
         env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
@@ -61,8 +62,6 @@ public class NginxLogCostTimeStream {
         FlinkKafkaConsumer010<NginxLogInfo> consumer = new FlinkKafkaConsumer010<>(topic, nginxLogSchema, props);
         consumer.setStartFromLatest();//设置从最新位置开始消费
         DataStreamSource<NginxLogInfo> data = env.addSource(consumer);
-
-        int reParallelism = (int) Math.ceil(parameterTool.getDouble(CONFIGS.STREAM_PARALLELISM)/2.0);
 
         WindowedStream<NginxLogCostTime, String, TimeWindow> timeWindowRes = data.filter((FilterFunction<NginxLogInfo>) nginxLogInfo -> {
             if (null != nginxLogInfo) {
@@ -99,7 +98,7 @@ public class NginxLogCostTimeStream {
             nginxLogCostTime.setTime(nginxLogInfo.getTime());
             nginxLogCostTime.setCostTime(nginxLogInfo.getCostTime());
             return nginxLogCostTime;
-        }).returns(TypeInformation.of(new TypeHint<NginxLogCostTime>() {})).setParallelism(reParallelism)
+        }).returns(TypeInformation.of(new TypeHint<NginxLogCostTime>() {})).setParallelism(1)
         .keyBy(new KeySelector<NginxLogCostTime, String>() {
             @Override
             public String getKey(NginxLogCostTime nginxLogCostTime) {
