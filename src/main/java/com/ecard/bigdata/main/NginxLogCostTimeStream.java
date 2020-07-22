@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * @Description 接口调用时长报警
+ * @Description 接口调用时长报警（nginx接口监控保留已不再使用）
  * @Author WangXueDong
  * @Date 2020/4/10 9:24
  * @Version 1.0

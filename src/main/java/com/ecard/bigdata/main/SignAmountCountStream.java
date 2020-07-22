@@ -66,7 +66,7 @@ public class SignAmountCountStream {
                 String event = jsonLogInfo.getEvent();
                 String inputStr = jsonLogInfo.getInput().toString();
                 String outputStr = jsonLogInfo.getOutput().toString();
-                if (!JsonUtils.isJsonObject(inputStr) && !JsonUtils.isJsonObject(outputStr)) {
+                if (!JsonUtils.isJsonObject(inputStr) || !JsonUtils.isJsonObject(outputStr)) {
                     return false;
                 }
                 JSONObject outputJson = JSON.parseObject(outputStr);
