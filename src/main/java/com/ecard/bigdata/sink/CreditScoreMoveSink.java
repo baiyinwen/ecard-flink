@@ -4,7 +4,6 @@ import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.model.CreditScore;
 import com.ecard.bigdata.utils.ConfigUtils;
 import com.ecard.bigdata.utils.HBaseUtils;
-import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.hadoop.hbase.client.Put;
