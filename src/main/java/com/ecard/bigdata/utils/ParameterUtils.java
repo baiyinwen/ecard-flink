@@ -14,8 +14,6 @@ import java.io.InputStream;
  **/
 public class ParameterUtils {
 
-    public static final ParameterTool CONFIG_PARAMETERS = createParameterTool();
-
     public static ParameterTool createParameterTool() {
         try {
             InputStream in1 = ExecutionEnvUtils.class.getClassLoader().getResourceAsStream(CONSTANTS.ECARD_FLINK_CONFIG_FILE);

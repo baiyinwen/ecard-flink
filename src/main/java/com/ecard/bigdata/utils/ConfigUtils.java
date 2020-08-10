@@ -41,6 +41,11 @@ public class ConfigUtils {
         return "";
     }
 
+    public static boolean haveKey(String key) {
+
+        return prop.containsKey(key);
+    }
+
     public static String getString(String key) {
 
         return getProperty(key);

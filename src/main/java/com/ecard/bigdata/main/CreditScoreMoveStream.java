@@ -9,13 +9,18 @@ import com.ecard.bigdata.utils.KafkaConfigUtils;
 import com.ecard.bigdata.utils.ParameterUtils;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.TimeCharacteristic;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.util.Collector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @Description
@@ -32,7 +37,7 @@ public class CreditScoreMoveStream {
 
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
         String topic  = parameterTool.get(CONFIGS.CREDIT_SCORE_KAFKA_TOPIC);
-        final String KafkaGroupId = topic + "_" + ClassName;
+        String KafkaGroupId = topic + "_" + ClassName + new Date().getTime();
         Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, KafkaGroupId);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
@@ -42,7 +47,19 @@ public class CreditScoreMoveStream {
         FlinkKafkaConsumer010<CreditScore> consumer = new FlinkKafkaConsumer010<>(topic, creditScoreSchema, props);
         DataStreamSource<CreditScore> data = env.addSource(consumer);
 
-        data.addSink(new CreditScoreMoveSink()).name(CreditScoreMoveSink.class.getSimpleName());
+        DataStream<List<CreditScore>> dataWindow = data.timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.CREDIT_SCORE_TUMBLING_WINDOW_SIZE))).apply(new AllWindowFunction<CreditScore, List<CreditScore>, TimeWindow>() {
+            @Override
+            public void apply(TimeWindow timeWindow, Iterable<CreditScore> iterable, Collector<List<CreditScore>> collector) {
+                List<CreditScore> list = new ArrayList<>();
+                Iterator<CreditScore> iterator = iterable.iterator();
+                while (iterator.hasNext()) {
+                    list.add(iterator.next());
+                }
+                collector.collect(list);
+            }
+        });
+
+        dataWindow.addSink(new CreditScoreMoveSink()).name(CreditScoreMoveSink.class.getSimpleName());
 
         env.execute(ClassName);
     }
