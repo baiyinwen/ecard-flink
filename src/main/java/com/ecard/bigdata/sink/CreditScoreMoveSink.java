@@ -22,6 +22,9 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
 
     private static Logger logger = LoggerFactory.getLogger(CreditScoreMoveSink.class);
     private static HBaseUtils hBaseUtils;
+    private static String FAMILY;
+    private static String TIME = "";
+    private static String SCORE = "";
 
     @Override
     public void open(Configuration parameters) throws Exception {
@@ -30,6 +33,9 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
         super.open(parameters);
         String tableName = ConfigUtils.getString(CONFIGS.CREDIT_SCORE_HBASE_TABLE);
         hBaseUtils = new HBaseUtils(tableName);
+        FAMILY = ConfigUtils.getString(CONFIGS.CREDIT_SCORE_HBASE_TABLE_FAMILY1);
+        TIME = ConfigUtils.getString(CONFIGS.CREDIT_SCORE_HBASE_TABLE_FAMILY1_TIME);
+        SCORE = ConfigUtils.getString(CONFIGS.CREDIT_SCORE_HBASE_TABLE_FAMILY1_SCORE);
     }
 
     @Override
@@ -44,14 +50,13 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
     public void invoke(List<CreditScore> list, Context context) {
 
         try {
-            String family = "data";
             for (CreditScore creditScore: list) {
                 String id = creditScore.getCreditID() == null ? "" : creditScore.getCreditID();
                 String jssjc = creditScore.getTime() == null ? "" : creditScore.getTime();
                 String score = creditScore.getScore() == null ? "" : creditScore.getScore();
                 Put put = new Put(id.getBytes());
-                put.addColumn(family.getBytes(), "jssjc".getBytes(), jssjc.getBytes());
-                put.addColumn(family.getBytes(), "score".getBytes(), score.getBytes());
+                put.addColumn(FAMILY.getBytes(), TIME.getBytes(), jssjc.getBytes());
+                put.addColumn(FAMILY.getBytes(), SCORE.getBytes(), score.getBytes());
                 hBaseUtils.putData(put);
             }
             hBaseUtils.flush();

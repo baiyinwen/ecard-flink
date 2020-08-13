@@ -59,7 +59,7 @@ public class CreditScoreMoveStream {
             }
         });
 
-        dataWindow.addSink(new CreditScoreMoveSink()).name(CreditScoreMoveSink.class.getSimpleName());
+        dataWindow.addSink(new CreditScoreMoveSink()).name(CreditScoreMoveSink.class.getSimpleName()).setParallelism(20);
 
         env.execute(ClassName);
     }
