@@ -1,7 +1,5 @@
 package com.ecard.bigdata.utils;
 
-import com.ecard.bigdata.constants.CONFIGS;
-
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

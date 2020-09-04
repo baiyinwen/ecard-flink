@@ -31,6 +31,7 @@ public class JsonLogSchema implements DeserializationSchema<JsonLogInfo>, Serial
             jsonLogInfo.setOrigLog(origLog);
             return jsonLogInfo;
         }
+        logger.info("is empty");
         return null;
     }
 

@@ -23,7 +23,6 @@ public class SignAmountCountTrigger<JsonLogInfo> extends Trigger<JsonLogInfo, Ti
 
         ReducingState<Long> countReducingState = triggerContext.getPartitionedState(countStateDescriptor);
         countReducingState.add(1L);
-        System.err.println("onElement --- " + countReducingState.get());
         if (timeWindow.maxTimestamp() <= triggerContext.getCurrentWatermark()) {
             countReducingState.clear();
             return TriggerResult.FIRE;
@@ -43,7 +42,6 @@ public class SignAmountCountTrigger<JsonLogInfo> extends Trigger<JsonLogInfo, Ti
     public TriggerResult onEventTime(long l, TimeWindow timeWindow, TriggerContext triggerContext) throws Exception {
 
         ReducingState<Long> countReducingState = triggerContext.getPartitionedState(countStateDescriptor);
-        System.err.println("onEventTime --- " + countReducingState.get());
         if (l >= timeWindow.maxTimestamp() && countReducingState.get()!= null && countReducingState.get() > 0) {
             countReducingState.clear();
             return TriggerResult.FIRE_AND_PURGE;

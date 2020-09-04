@@ -41,7 +41,7 @@ public class KafkaConfigUtils {
             props.put("sasl.tbds.secure.id", parameterTool.get(CONFIGS.KAFKA_SASL_TBDS_SECURE_ID));
             props.put("sasl.tbds.secure.key", parameterTool.get(CONFIGS.KAFKA_SASL_TBDS_SECURE_KEY));
         }
-
+        logger.info(props.toString());
         return props;
     }
 

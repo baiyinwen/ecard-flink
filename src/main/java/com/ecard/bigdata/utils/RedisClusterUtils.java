@@ -87,9 +87,4 @@ public class RedisClusterUtils {
         jedisCluster.set(key, value);
     }
 
-    public static void main(String[] args) {
-
-        System.err.println(getValue("signa"));
-
-    }
 }

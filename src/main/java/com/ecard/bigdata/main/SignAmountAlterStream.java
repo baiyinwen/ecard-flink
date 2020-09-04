@@ -46,6 +46,7 @@ public class SignAmountAlterStream {
      **/
     public static void main(String[] args) throws Exception {
 
+        logger.info("start " + ClassName);
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
         String topic  = parameterTool.get(CONFIGS.SIGN_ALTER_KAFKA_TOPIC);
         final String KafkaGroupId = topic + "_" + ClassName;
@@ -69,7 +70,7 @@ public class SignAmountAlterStream {
                 JSONObject outputJson = JSON.parseObject(outputStr);
                 if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
                         && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
-                    String md5Log = Md5Utils.encodeMd5(jsonLogInfo.getOrigLog());
+                    String md5Log = EncodeUtils.md5Encode(jsonLogInfo.getOrigLog());
                     boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.SIGN_REDIS_LOG_ALTER_MD5_KEY + md5Log);
                     if (isMember) {
                         return false;

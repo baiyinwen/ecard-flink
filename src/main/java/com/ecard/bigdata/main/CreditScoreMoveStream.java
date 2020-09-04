@@ -35,6 +35,7 @@ public class CreditScoreMoveStream {
 
     public static void main(String[] args) throws Exception {
 
+        logger.info("start " + ClassName);
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
         String topic  = parameterTool.get(CONFIGS.CREDIT_SCORE_KAFKA_TOPIC);
         String KafkaGroupId = topic + "_" + ClassName;

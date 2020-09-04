@@ -11,10 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @Description mysql操作工具类
@@ -63,14 +60,10 @@ public class TBaseUtils {
         druidDataSource.setMaxWait(TBASE_JDBC_MAX_WAIT);
     }
 
-    public static TBaseUtils getInstance() {
+    public static synchronized TBaseUtils getInstance() {
 
         if(instance == null) {
-            synchronized(TBaseUtils.class) {
-                if(instance == null) {
-                    instance = new TBaseUtils();
-                }
-            }
+            instance = new TBaseUtils();
         }
         return instance;
     }
@@ -231,28 +224,6 @@ public class TBaseUtils {
     public interface QueryCallback {
 
         void process(ResultSet rs) throws Exception;
-    }
-
-    public static void main(String[] args) {
-
-        TBaseUtils tBaseUtils = TBaseUtils.getInstance();
-
-        String sql = "INSERT INTO data_analysis_sign_min(COLLECT_TIME, CHANNEL_NO, CARD_REGION_CODE, TRANSFER_TIMES)" +
-                " VALUES(?, ?, ?, ?) ";
-        Object[] params = new Object[]{
-                DateTimeUtils.getIntervalBasicTime(new Date().getTime(), 60),
-                "0000000",
-                "0100",
-                22};
-        ExecutorService exServer = Executors.newFixedThreadPool(600);
-        for (int i = 0; i < 1000; i ++) {
-            exServer.execute(new Runnable() {
-                public void run() {
-                    logger.info("ready to save -- " + params.toString());
-                    tBaseUtils.executeUpdate(sql, params);
-                }
-            });
-        }
     }
 
 }

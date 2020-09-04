@@ -1,13 +1,11 @@
 package com.ecard.bigdata.waterMarkers;
 
-import com.ecard.bigdata.model.SignAmount;
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
+import com.ecard.bigdata.model.SignAmount;
 import com.ecard.bigdata.utils.ConfigUtils;
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
 import org.apache.flink.streaming.api.watermark.Watermark;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 
@@ -18,8 +16,6 @@ import javax.annotation.Nullable;
  * @Version 1.0
  **/
 public class SignAmountCountWatermark implements AssignerWithPeriodicWatermarks<SignAmount> {
-
-    private static Logger logger = LoggerFactory.getLogger(SignAmountCountWatermark.class);
 
     private final long maxOutOfOrder  = ConfigUtils.getLong(CONFIGS.SIGN_COUNT_MAX_OUT_OF_ORDER);
     private long currentTimestamp = CONSTANTS.NUMBER_0;

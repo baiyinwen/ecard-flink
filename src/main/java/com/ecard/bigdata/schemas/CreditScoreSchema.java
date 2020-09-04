@@ -33,6 +33,7 @@ public class CreditScoreSchema implements KeyedDeserializationSchema<CreditScore
             creditScore.setScore(data[2]);
             return creditScore;
         }
+        logger.info("is empty");
         return null;
     }
 

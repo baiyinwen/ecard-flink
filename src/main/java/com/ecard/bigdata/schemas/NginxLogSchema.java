@@ -8,6 +8,7 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -98,7 +99,7 @@ public class NginxLogSchema implements DeserializationSchema<NginxLogInfo>, Seri
         if (matcher.find() && matcher.groupCount() == 1) {
             code = matcher.group(1).trim();
         }
-        if ("".equals(ip) || costTime <= 0 || "".equals(event) || "".equals(code)){
+        if ("".equals(ip) || new BigDecimal(costTime).compareTo(new BigDecimal(0)) < 1 || "".equals(event) || "".equals(code)){
             logger.info("got a wrong log --- " + logLine);
             return null;
         }

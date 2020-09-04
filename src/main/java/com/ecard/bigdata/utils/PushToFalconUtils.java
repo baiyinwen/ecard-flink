@@ -40,15 +40,11 @@ public class PushToFalconUtils {
         return HttpClients.custom().setConnectionManager(manager).build();
     }
 
-    private void getHttpClient() {
+    private synchronized void getHttpClient() {
 
         if (null == httpClient) {
-            synchronized(syncLock) {
-                if (null == httpClient) {
-                    httpClient = createHttpClient();
-                    logger.info("get http client --- ");
-                }
-            }
+            httpClient = createHttpClient();
+            logger.info("get http client --- ");
         }
     }
 

@@ -50,6 +50,7 @@ public class NginxLogCostTimeStream {
      **/
     public static void main(String[] args) throws Exception {
 
+        logger.info("start " + ClassName);
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
         String topic  = parameterTool.get(CONFIGS.COST_TIME_KAFKA_TOPIC);
         final String KafkaGroupId = topic + "_" + ClassName;
@@ -77,7 +78,7 @@ public class NginxLogCostTimeStream {
                 if (CONSTANTS.NGINX_STATUS_SUCCESS_VALUE.equals(code)) {
                     for (String event: events) {
                         if (!event.trim().isEmpty() && event.trim().equals(nginxLogInfo.getEvent().trim())) {
-                            String md5Log = Md5Utils.encodeMd5(nginxLogInfo.getOrigLog());
+                            String md5Log = EncodeUtils.md5Encode(nginxLogInfo.getOrigLog());
                             boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.COST_TIME_REDIS_LOG_MD5_KEY + md5Log);
                             if (isMember) {
                                 return false;
