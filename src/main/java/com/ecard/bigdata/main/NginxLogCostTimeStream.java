@@ -14,6 +14,7 @@ import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -40,6 +41,8 @@ public class NginxLogCostTimeStream {
 
     private static Logger logger = LoggerFactory.getLogger(NginxLogCostTimeStream.class);
     private static final String ClassName = NginxLogCostTimeStream.class.getSimpleName();
+    private static long STREAM_CHECKPOINT_INTERVAL = 60000;
+    private static CheckpointingMode STREAM_CHECKPOINT_MODE = CheckpointingMode.EXACTLY_ONCE;
 
     /**
      * @Description
@@ -58,6 +61,7 @@ public class NginxLogCostTimeStream {
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
         env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
+        env.enableCheckpointing(STREAM_CHECKPOINT_INTERVAL, STREAM_CHECKPOINT_MODE);
 
         NginxLogSchema nginxLogSchema = new NginxLogSchema();
         FlinkKafkaConsumer010<NginxLogInfo> consumer = new FlinkKafkaConsumer010<>(topic, nginxLogSchema, props);

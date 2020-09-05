@@ -18,6 +18,7 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
@@ -40,6 +41,8 @@ public class SignAmountCountStream {
 
     private static Logger logger = LoggerFactory.getLogger(SignAmountCountStream.class);
     private static final String ClassName = SignAmountCountStream.class.getSimpleName();
+    private static long STREAM_CHECKPOINT_INTERVAL = 60000;
+    private static CheckpointingMode STREAM_CHECKPOINT_MODE = CheckpointingMode.EXACTLY_ONCE;
 
     /**
      * @Description
@@ -57,6 +60,7 @@ public class SignAmountCountStream {
         Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, KafkaGroupId);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
+        env.enableCheckpointing(STREAM_CHECKPOINT_INTERVAL, STREAM_CHECKPOINT_MODE);
 
         JsonLogSchema jsonLogSchema = new JsonLogSchema();
         FlinkKafkaConsumer010<JsonLogInfo> consumer = new FlinkKafkaConsumer010<>(topic, jsonLogSchema, props);
