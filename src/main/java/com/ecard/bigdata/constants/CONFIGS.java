@@ -8,6 +8,7 @@ package com.ecard.bigdata.constants;
  **/
 public class CONFIGS {
 
+    /*kafka、zookeeper地址*/
     public final static String KAFKA_BROKERS = "kafka.brokers";
     public final static String ZOOKEEPER_SERVERS = "zookeeper.servers";
 
@@ -20,6 +21,7 @@ public class CONFIGS {
     public final static String REDIS_HOSTS = "redis.hosts";
     public final static String REDIS_PASSWORD = "redis.password";
 
+    /*open-falcon报警推送url*/
     public final static String OPEN_FALCON_PUSH_URL = "open.falcon.push.url";
 
     /*kafka身份认证*/
@@ -59,5 +61,11 @@ public class CONFIGS {
     public final static String CREDIT_SCORE_HBASE_TABLE_FAMILY1_TIME = "credit.score.hbase.table.family1.time";
     public final static String CREDIT_SCORE_HBASE_TABLE_FAMILY1_SCORE = "credit.score.hbase.table.family1.score";
     public final static String CREDIT_SCORE_TUMBLING_WINDOW_SIZE = "credit.score.tumbling.window.size";
+
+    /*计费接口调用次数*/
+    public final static String BILLING_TRANSFER_KAFKA_TOPIC = "billing.transfer.count.kafka.topic";
+    public final static String BILLING_TRANSFER_TUMBLING_WINDOW_SIZE = "billing.transfer.count.tumbling.window.size";
+    public final static String BILLING_TRANSFER_MAX_OUT_OF_ORDER = "billing.transfer.count.max.out.of.order";
+    public final static String BILLING_TRANSFER_MAX_ALLOWED_LATENESS = "billing.transfer.count.max.allowed.lateness";
 
 }

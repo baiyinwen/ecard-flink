@@ -1,5 +1,5 @@
 --- 每分钟签发量
-drop table if exists public.data_analysis_sign_min
+drop table if exists public.data_analysis_sign_min;
 create table public.data_analysis_sign_min
 (
     id               bigserial not null primary key,

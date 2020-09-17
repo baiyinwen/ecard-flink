@@ -11,7 +11,7 @@ public class CONSTANTS {
     public final static String ECARD_FLINK_CONFIG_FILE = "ecard-flink.properties";
     public final static String APPLICATION_CONFIG_FILE = "application.properties";
 
-    public final static String TBASE_JDBC_DRIVER = "org.postgresql.Driver";
+    public final static String TBASE_JDBC_DRIVER = "org.postgresql.Driver";//TBase数据库驱动
 
     public final static String DATE_TIME_FORMAT_1 = "yyyy-MM-dd HH:mm:ss";
     public final static String DATE_TIME_FORMAT_2 = "yyyyMMddHHmmss";
@@ -23,19 +23,30 @@ public class CONSTANTS {
     public final static int NUMBER_0 = 0;
     public final static int NUMBER_1 = 1;
 
-    public final static String EVENT_MSG_CODE_KEY = "msgCode";
-    public final static String EVENT_MSG_CODE_VALUE = "000000";
-    public final static String EVENT_ESSC_LOG_SIGN = "essc_log_sign";//签发日志的event
-    public final static String EVENT_ESSC_LOG_SIGN_AAB_301 = "aab301";//签发日志中签发地区行政划分码
-    public final static String EVENT_ESSC_LOG_SIGN_SIGN_SEQ = "signSeq";//后六位签发日志中签发地区行政划分码
+    public final static String EVENT_MSG_CODE_KEY = "msgCode";//ecard日志调用结果key
+    public final static String EVENT_MSG_CODE_VALUE = "000000";//ecard日志调用结果value
+    public final static String EVENT_ESSC_LOG_SIGN = "essc_log_sign";//ecard日志签发日志的event
+    public final static String EVENT_ESSC_LOG_SIGN_AAB_301 = "aab301";//ecard日志签发日志中签发地区行政划分码
+    public final static String EVENT_ESSC_LOG_SIGN_SIGN_SEQ = "signSeq";//ecard日志后六位签发日志中签发地区行政划分码
 
-    public final static String NGINX_STATUS_SUCCESS_VALUE = "200";
+    public final static String EVENT_BILLING_LOG_AUTH_PHOTO = "auth_photo";//计费系统日志的event
 
+    public final static String NGINX_STATUS_SUCCESS_VALUE = "200";//nginx日志调用成功码
+
+    /*签发量统计redis去重前缀及过期时间*/
     public final static String SIGN_REDIS_LOG_COUNT_MD5_KEY = "signLogCountMd5";
     public final static int SIGN_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS = 86400;
+
+    /*签发量报警redis去重前缀及过期时间*/
     public final static String SIGN_REDIS_LOG_ALTER_MD5_KEY = "signLogAlterMd5";
     public final static int SIGN_REDIS_LOG_ALTER_KEY_EXPIRE_SECONDS = 86400;
+
+    /*接口调用时长redis去重前缀及过期时间*/
     public final static String COST_TIME_REDIS_LOG_MD5_KEY = "costTimeLogMd5";
     public final static int COST_TIME_REDIS_LOG_KEY_EXPIRE_SECONDS = 86400;
+
+    /*计费调用次数redis去重前缀及过期时间*/
+    public final static String BILLING_REDIS_LOG_COUNT_MD5_KEY = "billingTransferCountMd5";
+    public final static int BILLING_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS = 86400;
 
 }
