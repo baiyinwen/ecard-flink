@@ -50,6 +50,7 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
     public void invoke(List<CreditScore> list, Context context) {
 
         try {
+            int count = 0;
             for (CreditScore creditScore: list) {
                 String id = creditScore.getCreditID() == null ? "" : creditScore.getCreditID();
                 String jssjc = creditScore.getTime() == null ? "" : creditScore.getTime();
@@ -58,7 +59,9 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
                 put.addColumn(FAMILY.getBytes(), TIME.getBytes(), jssjc.getBytes());
                 put.addColumn(FAMILY.getBytes(), SCORE.getBytes(), score.getBytes());
                 hBaseUtils.putData(put);
+                count ++ ;
             }
+            logger.info("get list --- " + count);
             hBaseUtils.flush();
             logger.info("save data to hbase");
         } catch (Exception e) {
