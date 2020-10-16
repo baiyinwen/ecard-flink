@@ -13,8 +13,8 @@ public class CreditScore implements Serializable {
     private String topic;
     private String key;
     private String creditID;
-    private String time;
     private String score;
+    private String time;
 
     public String getTopic() {
         return topic;
@@ -40,14 +40,6 @@ public class CreditScore implements Serializable {
         this.creditID = creditID;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
     public String getScore() {
         return score;
     }
@@ -56,9 +48,17 @@ public class CreditScore implements Serializable {
         this.score = score;
     }
 
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     @Override
     public String toString() {
-        return topic + "," + key + ","+ creditID + "," + time + ","+ score;
+        return topic + "," + key + ","+ creditID + "," + score + ","+ time;
     }
 
 }
