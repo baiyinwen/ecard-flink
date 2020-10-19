@@ -57,9 +57,6 @@ public class CONFIGS {
     /*信用评分迁移*/
     public final static String CREDIT_SCORE_KAFKA_TOPIC = "credit.score.kafka.topic";
     public final static String CREDIT_SCORE_HBASE_TABLE = "credit.score.hbase.table";
-    public final static String CREDIT_SCORE_HBASE_TABLE_FAMILY1 = "credit.score.hbase.table.family1";
-    public final static String CREDIT_SCORE_HBASE_TABLE_FAMILY1_TIME = "credit.score.hbase.table.family1.time";
-    public final static String CREDIT_SCORE_HBASE_TABLE_FAMILY1_SCORE = "credit.score.hbase.table.family1.score";
     public final static String CREDIT_SCORE_TUMBLING_WINDOW_SIZE = "credit.score.tumbling.window.size";
 
     /*计费接口调用次数*/

@@ -22,9 +22,9 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
 
     private static Logger logger = LoggerFactory.getLogger(CreditScoreMoveSink.class);
     private static HBaseUtils hBaseUtils;
-    private static String FAMILY;
-    private static String TIME = "";
-    private static String SCORE = "";
+    private static String FAMILY = "data";
+    private static String SCORE = "score";
+    //private static String TIME = "jssjc";
 
     @Override
     public void open(Configuration parameters) throws Exception {
@@ -33,9 +33,6 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
         super.open(parameters);
         String tableName = ConfigUtils.getString(CONFIGS.CREDIT_SCORE_HBASE_TABLE);
         hBaseUtils = new HBaseUtils(tableName);
-        FAMILY = ConfigUtils.getString(CONFIGS.CREDIT_SCORE_HBASE_TABLE_FAMILY1);
-        TIME = ConfigUtils.getString(CONFIGS.CREDIT_SCORE_HBASE_TABLE_FAMILY1_TIME);
-        SCORE = ConfigUtils.getString(CONFIGS.CREDIT_SCORE_HBASE_TABLE_FAMILY1_SCORE);
     }
 
     @Override
@@ -53,11 +50,11 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
             int count = 0;
             for (CreditScore creditScore: list) {
                 String id = creditScore.getCreditID() == null ? "" : creditScore.getCreditID();
-                String jssjc = creditScore.getTime() == null ? "" : creditScore.getTime();
                 String score = creditScore.getScore() == null ? "" : creditScore.getScore();
+                //String jssjc = creditScore.getTime() == null ? "" : creditScore.getTime();
                 Put put = new Put(id.getBytes());
-                put.addColumn(FAMILY.getBytes(), TIME.getBytes(), jssjc.getBytes());
                 put.addColumn(FAMILY.getBytes(), SCORE.getBytes(), score.getBytes());
+                //put.addColumn(FAMILY.getBytes(), TIME.getBytes(), jssjc.getBytes());
                 hBaseUtils.putData(put);
                 count ++ ;
             }
