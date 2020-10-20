@@ -24,7 +24,7 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
     private static HBaseUtils hBaseUtils;
     private static String FAMILY = "data";
     private static String SCORE = "score";
-    //private static String TIME = "jssjc";
+    private static String TIME = "jssjc";
 
     @Override
     public void open(Configuration parameters) throws Exception {
@@ -51,10 +51,10 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
             for (CreditScore creditScore: list) {
                 String id = creditScore.getCreditID() == null ? "" : creditScore.getCreditID();
                 String score = creditScore.getScore() == null ? "" : creditScore.getScore();
-                //String jssjc = creditScore.getTime() == null ? "" : creditScore.getTime();
+                String jssjc = creditScore.getTime() == null ? "" : creditScore.getTime();
                 Put put = new Put(id.getBytes());
                 put.addColumn(FAMILY.getBytes(), SCORE.getBytes(), score.getBytes());
-                //put.addColumn(FAMILY.getBytes(), TIME.getBytes(), jssjc.getBytes());
+                put.addColumn(FAMILY.getBytes(), TIME.getBytes(), jssjc.getBytes());
                 hBaseUtils.putData(put);
                 count ++ ;
             }

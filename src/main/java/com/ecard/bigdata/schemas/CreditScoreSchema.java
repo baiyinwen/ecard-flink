@@ -30,7 +30,7 @@ public class CreditScoreSchema implements KeyedDeserializationSchema<CreditScore
             //creditScore.setKey(key);
             creditScore.setCreditID(data[0]);
             creditScore.setScore(data[1]);
-            //creditScore.setTime(data[2]);
+            creditScore.setTime(data[2]);
             return creditScore;
         }
         logger.info("is empty");
