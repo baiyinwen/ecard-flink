@@ -38,7 +38,7 @@ public class CreditScoreMoveStream {
         logger.info("start " + ClassName);
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
         String topic  = parameterTool.get(CONFIGS.CREDIT_SCORE_KAFKA_TOPIC);
-        String KafkaGroupId = topic + "_" + ClassName;
+        String KafkaGroupId = topic + "_" + ClassName + "202010202000";
         Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, KafkaGroupId);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
