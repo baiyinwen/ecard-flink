@@ -1,6 +1,5 @@
 package com.ecard.bigdata.main;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ecard.bigdata.bean.JsonLogInfo;
 import com.ecard.bigdata.constants.CONFIGS;
@@ -70,15 +69,16 @@ public class SignAmountCountOneStepStream {
         SingleOutputStreamOperator<JsonLogInfo> filterRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
                 String event = jsonLogInfo.getEvent();
-                String inputStr = jsonLogInfo.getInput().toString();
-                String outputStr = jsonLogInfo.getOutput().toString();
-                if (!JsonUtils.isJsonObject(inputStr) || !JsonUtils.isJsonObject(outputStr)) {
-                    return false;
-                }
-                JSONObject outputJson = JSON.parseObject(outputStr);
-                if (CONSTANTS.EVENT_ESSC_LOG_SIGN_ONE_STEP.equals(event)
-                        && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
-                    return true;
+                if (CONSTANTS.EVENT_ESSC_LOG_SIGN_ONE_STEP.equals(event)) {
+                    String inputStr = jsonLogInfo.getInput().toString();
+                    String outputStr = jsonLogInfo.getOutput().toString();
+                    if (!JsonUtils.isValidObject(inputStr) || !JsonUtils.isValidObject(outputStr)) {
+                        return false;
+                    }
+                    JSONObject outputJson = JSONObject.parseObject(JSONObject.toJSONString(jsonLogInfo.getOutput()));
+                    if (CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -101,7 +101,7 @@ public class SignAmountCountOneStepStream {
 
         WindowedStream<SignAmount, Tuple2<String, String>, TimeWindow> timeWindowRes = distinctRes.map((MapFunction<JsonLogInfo, SignAmount>) jsonLogInfo -> {
             SignAmount signAmount = new SignAmount();
-            JSONObject inputObj = JSONObject.parseObject(jsonLogInfo.getInput().toString());
+            JSONObject inputObj = JSONObject.parseObject(JSONObject.toJSONString(jsonLogInfo.getInput()));
             String cardRegionCode = inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_AAB_301);
             if (null == cardRegionCode || cardRegionCode.trim().isEmpty()) {
                 cardRegionCode = inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_SIGN_SEQ);

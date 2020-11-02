@@ -25,4 +25,15 @@ public class JsonUtils {
         return true;
     }
 
+    public static boolean isValidObject(String str){
+        try {
+            JSONObject.isValidObject(str);
+        } catch (Exception e) {
+            logger.error(str);
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
 }
