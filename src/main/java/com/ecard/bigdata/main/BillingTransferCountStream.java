@@ -66,7 +66,7 @@ public class BillingTransferCountStream {
         WindowedStream<BillingTransfer, String, TimeWindow> timeWindowRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
                 String event = jsonLogInfo.getEvent();
-                if (CONSTANTS.EVENT_BILLING_LOG_AUTH_PHOTO.equals(event)) {
+                if (CONSTANTS.EVENT_BILLING_LOG_AUTH_PHOTO.equals(event) && (!jsonLogInfo.getChannelNo().isEmpty() || !"".equals(jsonLogInfo.getChannelNo()))) {
                     String md5Log = EncodeUtils.md5Encode(jsonLogInfo.getOrigLog());
                     boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.BILLING_REDIS_LOG_COUNT_MD5_KEY + md5Log);
                     if (isMember) {
