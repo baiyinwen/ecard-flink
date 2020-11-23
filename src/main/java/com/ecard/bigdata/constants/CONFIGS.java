@@ -8,6 +8,9 @@ package com.ecard.bigdata.constants;
  **/
 public class CONFIGS {
 
+    /**
+     * 系统参数
+     **/
     /*kafka、zookeeper地址*/
     public final static String KAFKA_BROKERS = "kafka.brokers";
     public final static String ZOOKEEPER_SERVERS = "zookeeper.servers";
@@ -29,6 +32,18 @@ public class CONFIGS {
     public final static String KAFKA_SASL_TBDS_SECURE_ID = "kafka.sasl.tbds.secure.id";
     public final static String KAFKA_SASL_TBDS_SECURE_KEY = "kafka.sasl.tbds.secure.key";
 
+    /*hbase身份认证*/
+    public final static String HBASE_ZK_ZNODE_PARENT = "hbase.zk.znode.parent";
+    public final static String HBASE_TBDS_SECURE_ENABLE = "hbase.tbds.secure.enable";
+    public final static String HBASE_TBDS_SECURE_ID = "hbase.tbds.secure.id";
+    public final static String HBASE_TBDS_SECURE_KEY = "hbase.tbds.secure.key";
+
+    /*rocketMQ地址*/
+    public final static String ROCKET_MQ_NAME_SERVER = "rocket.mq.name.server";
+
+    /**
+     * 应用参数
+     **/
     /*签发量统计*/
     public final static String SIGN_COUNT_KAFKA_TOPIC = "sign.count.kafka.topic";
     public final static String SIGN_COUNT_TUMBLING_WINDOW_SIZE = "sign.count.tumbling.window.size";
@@ -48,12 +63,6 @@ public class CONFIGS {
     public final static String COST_TIME_EVENT_CODE_POST2 = "cost.time.event.code.post2";
     public final static String COST_TIME_EVENT_CODE_GET = "cost.time.event.code.get";
 
-    /*hbase身份认证*/
-    public final static String HBASE_ZK_ZNODE_PARENT = "hbase.zk.znode.parent";
-    public final static String HBASE_TBDS_SECURE_ENABLE = "hbase.tbds.secure.enable";
-    public final static String HBASE_TBDS_SECURE_ID = "hbase.tbds.secure.id";
-    public final static String HBASE_TBDS_SECURE_KEY = "hbase.tbds.secure.key";
-
     /*信用评分迁移*/
     public final static String CREDIT_SCORE_KAFKA_TOPIC = "credit.score.kafka.topic";
     public final static String CREDIT_SCORE_HBASE_TABLE = "credit.score.hbase.table";
@@ -64,5 +73,12 @@ public class CONFIGS {
     public final static String BILLING_TRANSFER_TUMBLING_WINDOW_SIZE = "billing.transfer.count.tumbling.window.size";
     public final static String BILLING_TRANSFER_MAX_OUT_OF_ORDER = "billing.transfer.count.max.out.of.order";
     public final static String BILLING_TRANSFER_MAX_ALLOWED_LATENESS = "billing.transfer.count.max.allowed.lateness";
+
+    /*风控支付日志落库hbase并推送到rocketMq*/
+    public final static String RISK_CONTROL_PAY_ROCKET_MQ_CONSUMER_GROUP = "risk.control.pay.rocket.mq.consumer.group";
+    public final static String RISK_CONTROL_PAY_ROCKET_MQ_CONSUMER_TOPIC = "risk.control.pay.rocket.mq.consumer.topic";
+    public final static String RISK_CONTROL_PAY_ROCKET_MQ_PRODUCER_GROUP = "risk.control.pay.rocket.mq.producer.group";
+    public final static String RISK_CONTROL_PAY_ROCKET_MQ_PRODUCER_TOPIC = "risk.control.pay.rocket.mq.producer.topic";
+    public final static String RISK_CONTROL_PAY_HBASE_TABLE = "risk.control.pay.hbase.table";
 
 }

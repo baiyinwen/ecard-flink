@@ -104,6 +104,22 @@
             <artifactId>RoaringBitmap</artifactId>
             <version>0.9.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>4.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-acl</artifactId>
+            <version>4.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-common</artifactId>
+            <version>4.7.1</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>
@@ -129,7 +145,7 @@
                 <filtering>true</filtering>
                 <excludes>
                     <!--排除资源文件-->
-                    <exclude>**/tbase/**</exclude>
+                    <exclude>**/script/**</exclude>
                     <exclude>**/dev/**</exclude>
                     <exclude>**/pre/**</exclude>
                     <exclude>**/pro/**</exclude>
