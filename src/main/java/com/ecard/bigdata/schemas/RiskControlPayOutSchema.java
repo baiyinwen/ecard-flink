@@ -20,9 +20,9 @@ public class RiskControlPayOutSchema implements KeyValueSerializationSchema<Risk
 
     @Override
     public byte[] serializeValue(RiskControlPayLogInfo riskControlPayLogInfo) {
-        String ak = riskControlPayLogInfo.getAk() != null ? riskControlPayLogInfo.getAk() : null;
-        String essCardNo = riskControlPayLogInfo.getAk() != null ? riskControlPayLogInfo.getEssCardNo() : null;
-        String uniformOrderId = riskControlPayLogInfo.getAk() != null ? riskControlPayLogInfo.getUniformOrderId() : null;
+        String ak = riskControlPayLogInfo.getAk() != null ? riskControlPayLogInfo.getAk() : "";
+        String essCardNo = riskControlPayLogInfo.getAk() != null ? riskControlPayLogInfo.getEssCardNo() : "";
+        String uniformOrderId = riskControlPayLogInfo.getAk() != null ? riskControlPayLogInfo.getUniformOrderId() : "";
         String msg = "{\"ak\":\""+ak+"\", \"essCardNo\":\""+essCardNo+"\", \"uniformOrderId\":\""+uniformOrderId+"\"}";
         return msg.getBytes(StandardCharsets.UTF_8);
     }
