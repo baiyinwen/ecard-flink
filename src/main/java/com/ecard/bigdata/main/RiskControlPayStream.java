@@ -45,7 +45,7 @@ public class RiskControlPayStream {
         props.setProperty(RocketMQConfig.CONSUMER_TOPIC, topic);
 
         StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
-        env.enableCheckpointing(STREAM_CHECKPOINT_INTERVAL);
+        env.enableCheckpointing(STREAM_CHECKPOINT_INTERVAL, STREAM_CHECKPOINT_MODE);
 
         RiskControlPayInSchema riskControlPayInSchema = new RiskControlPayInSchema();
         RocketMQSource<RiskControlPayLogInfo> consumer = new RocketMQSource(riskControlPayInSchema, props);
