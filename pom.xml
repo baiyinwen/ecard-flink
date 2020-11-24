@@ -10,7 +10,7 @@
 
     <properties>
         <!--运行环境：本地-dev、测试-pre、生产-pro-->
-        <execute.env>pro</execute.env>
+        <execute.env>dev</execute.env>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.binary.version>2.11</scala.binary.version>
         <flink.version>1.7.0</flink.version>
@@ -103,21 +103,6 @@
             <groupId>org.roaringbitmap</groupId>
             <artifactId>RoaringBitmap</artifactId>
             <version>0.9.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-client</artifactId>
-            <version>4.7.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-acl</artifactId>
-            <version>4.7.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-common</artifactId>
-            <version>4.7.1</version>
         </dependency>
 
     </dependencies>

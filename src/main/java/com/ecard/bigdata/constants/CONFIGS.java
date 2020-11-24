@@ -74,11 +74,10 @@ public class CONFIGS {
     public final static String BILLING_TRANSFER_MAX_OUT_OF_ORDER = "billing.transfer.count.max.out.of.order";
     public final static String BILLING_TRANSFER_MAX_ALLOWED_LATENESS = "billing.transfer.count.max.allowed.lateness";
 
-    /*风控支付日志落库hbase并推送到rocketMq*/
-    public final static String RISK_CONTROL_PAY_ROCKET_MQ_CONSUMER_GROUP = "risk.control.pay.rocket.mq.consumer.group";
-    public final static String RISK_CONTROL_PAY_ROCKET_MQ_CONSUMER_TOPIC = "risk.control.pay.rocket.mq.consumer.topic";
-    public final static String RISK_CONTROL_PAY_ROCKET_MQ_PRODUCER_GROUP = "risk.control.pay.rocket.mq.producer.group";
-    public final static String RISK_CONTROL_PAY_ROCKET_MQ_PRODUCER_TOPIC = "risk.control.pay.rocket.mq.producer.topic";
+    /*风控支付日志落库hbase并推送到kafka*/
+    public final static String RISK_CONTROL_PAY_KAFKA_CONSUMER_GROUP = "risk.control.pay.kafka.consumer.group";
+    public final static String RISK_CONTROL_PAY_KAFKA_CONSUMER_TOPIC = "risk.control.pay.kafka.consumer.topic";
+    public final static String RISK_CONTROL_PAY_KAFKA_PRODUCER_TOPIC = "risk.control.pay.kafka.producer.topic";
     public final static String RISK_CONTROL_PAY_HBASE_TABLE = "risk.control.pay.hbase.table";
 
 }
