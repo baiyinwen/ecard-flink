@@ -82,12 +82,10 @@ public class CONFIGS {
 
     /*信用分调用次数统计*/
     public final static String CREDIT_SCORE_COUNT_KAFKA_TOPIC = "credit.score.count.kafka.topic";
-    public final static String CREDIT_SCORE_COUNT_TUMBLING_WINDOW_SIZE = "billing.transfer.count.tumbling.window.size";
-    public final static String CREDIT_SCORE_COUNT_MAX_ALLOWED_LATENESS = "billing.transfer.count.max.allowed.lateness";
+    public final static String CREDIT_SCORE_COUNT_TUMBLING_WINDOW_SIZE = "credit.score.count.tumbling.window.size";
 
     /*电子社保卡信息核验调用次数统计*/
     public final static String INFO_VERIFICATION_COUNT_KAFKA_TOPIC = "info.verification.count.kafka.topic";
     public final static String INFO_VERIFICATION_COUNT_TUMBLING_WINDOW_SIZE = "info.verification.count.tumbling.window.size";
-    public final static String INFO_VERIFICATION_COUNT_MAX_ALLOWED_LATENESS = "info.verification.count.max.allowed.lateness";
 
 }

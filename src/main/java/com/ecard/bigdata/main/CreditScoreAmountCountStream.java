@@ -99,8 +99,7 @@ public class CreditScoreAmountCountStream {
                 tuple2.f1 = creditScoreAmount.getAppKey();
                 return tuple2;
             }
-        }).timeWindow(Time.seconds(parameterTool.getLong(CONFIGS.CREDIT_SCORE_COUNT_TUMBLING_WINDOW_SIZE)))
-          .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.CREDIT_SCORE_COUNT_MAX_ALLOWED_LATENESS)));
+        }).timeWindow(Time.seconds(parameterTool.getLong(CONFIGS.CREDIT_SCORE_COUNT_TUMBLING_WINDOW_SIZE)));
 
         DataStream<CreditScoreAmount> reduceRes = mapRes.reduce((ReduceFunction<CreditScoreAmount>) (s1, s2) -> {
             s1.setTransferTimes(s1.getTransferTimes() + s2.getTransferTimes());
