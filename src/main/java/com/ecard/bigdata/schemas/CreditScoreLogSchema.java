@@ -13,7 +13,7 @@ import java.nio.charset.Charset;
 /**
  * @Description
  * @Author WangXueDong
- * @Date 2020/4/13 10:49
+ * @Date 2020/12/02 10:49
  * @Version 1.0
  **/
 public class CreditScoreLogSchema implements DeserializationSchema<CreditScoreLogInfo>, SerializationSchema<CreditScoreLogInfo> {

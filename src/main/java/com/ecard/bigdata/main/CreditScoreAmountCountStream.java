@@ -66,7 +66,6 @@ public class CreditScoreAmountCountStream {
 
         CreditScoreLogSchema creditScoreLogSchema = new CreditScoreLogSchema();
         FlinkKafkaConsumer010<CreditScoreLogInfo> consumer = new FlinkKafkaConsumer010<>(topic, creditScoreLogSchema, props);
-        consumer.setStartFromLatest();
         DataStreamSource<CreditScoreLogInfo> data = env.addSource(consumer);
 
         SingleOutputStreamOperator<CreditScoreLogInfo> distinctRes = data.filter((FilterFunction<CreditScoreLogInfo>) creditScoreLogInfo -> {
