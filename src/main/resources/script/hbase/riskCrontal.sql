@@ -22,4 +22,4 @@ create table if not exists RISKCONTROL.RISKCONTROL_LOGS(
 "data"."akc264" varchar,
 "data"."userName" varchar,
 "data"."tradeStatus" varchar,
-"data"."isHandle" varchar) column_encoded_bytes=0 split on (0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+"data"."isHandle" varchar) column_encoded_bytes=0 split on ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
