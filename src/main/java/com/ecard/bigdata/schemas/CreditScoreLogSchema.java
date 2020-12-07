@@ -27,9 +27,14 @@ public class CreditScoreLogSchema implements DeserializationSchema<CreditScoreLo
 
         String origLog = new String(bytes);
         if (!origLog.isEmpty()) {
-            CreditScoreLogInfo creditScoreLogInfo = gson.fromJson(origLog, CreditScoreLogInfo.class);
-            creditScoreLogInfo.setOrigLog(origLog);
-            return creditScoreLogInfo;
+            try {
+                CreditScoreLogInfo creditScoreLogInfo = gson.fromJson(origLog, CreditScoreLogInfo.class);
+                creditScoreLogInfo.setOrigLog(origLog);
+                return creditScoreLogInfo;
+            } catch (Exception e) {
+                logger.error("JSON日志转对象异常！" + origLog);
+                return null;
+            }
         }
         logger.info("is empty");
         return null;

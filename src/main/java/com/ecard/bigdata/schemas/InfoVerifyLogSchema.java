@@ -27,9 +27,14 @@ public class InfoVerifyLogSchema implements DeserializationSchema<InfoVerifyLogI
 
         String origLog = new String(bytes);
         if (!origLog.isEmpty()) {
-            InfoVerifyLogInfo infoVerifyLogInfo = gson.fromJson(origLog, InfoVerifyLogInfo.class);
-            infoVerifyLogInfo.setOrigLog(origLog);
-            return infoVerifyLogInfo;
+            try {
+                InfoVerifyLogInfo infoVerifyLogInfo = gson.fromJson(origLog, InfoVerifyLogInfo.class);
+                infoVerifyLogInfo.setOrigLog(origLog);
+                return infoVerifyLogInfo;
+            } catch (Exception e) {
+                logger.error("JSON日志转对象异常！" + origLog);
+                return null;
+            }
         }
         logger.info("is empty");
         return null;

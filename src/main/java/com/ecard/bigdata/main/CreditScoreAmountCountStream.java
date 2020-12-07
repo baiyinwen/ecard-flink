@@ -7,6 +7,7 @@ import com.ecard.bigdata.model.CreditScoreAmount;
 import com.ecard.bigdata.schemas.CreditScoreLogSchema;
 import com.ecard.bigdata.sink.CreditScoreAmountCountSink;
 import com.ecard.bigdata.utils.*;
+import com.ecard.bigdata.waterMarkers.CreditScoreAmountCountWatermark;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
@@ -16,7 +17,6 @@ import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.CheckpointingMode;
-import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Properties;
 
 /**
@@ -52,64 +51,71 @@ public class CreditScoreAmountCountStream {
      * @Author WangXueDong
      * @Date 2020/12/01 15:24
      **/
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
-        logger.info("start " + ClassName);
-        final ParameterTool parameterTool = ParameterUtils.createParameterTool();
-        String topic  = parameterTool.get(CONFIGS.CREDIT_SCORE_COUNT_KAFKA_TOPIC);
-        final String KafkaGroupId = topic + "_" + ClassName;
-        Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, KafkaGroupId);
+        try {
+            logger.info("start " + ClassName);
+            final ParameterTool parameterTool = ParameterUtils.createParameterTool();
+            String topic  = parameterTool.get(CONFIGS.CREDIT_SCORE_COUNT_KAFKA_TOPIC);
+            final String KafkaGroupId = topic + "_" + ClassName;
+            Properties props = KafkaConfigUtils.createKafkaProps(parameterTool, KafkaGroupId);
 
-        StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
-        env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
-        env.enableCheckpointing(STREAM_CHECKPOINT_INTERVAL, STREAM_CHECKPOINT_MODE);
+            StreamExecutionEnvironment env = ExecutionEnvUtils.prepare(parameterTool);
+            env.enableCheckpointing(STREAM_CHECKPOINT_INTERVAL, STREAM_CHECKPOINT_MODE);
 
-        CreditScoreLogSchema creditScoreLogSchema = new CreditScoreLogSchema();
-        FlinkKafkaConsumer010<CreditScoreLogInfo> consumer = new FlinkKafkaConsumer010<>(topic, creditScoreLogSchema, props);
-        DataStreamSource<CreditScoreLogInfo> data = env.addSource(consumer);
+            CreditScoreLogSchema creditScoreLogSchema = new CreditScoreLogSchema();
+            FlinkKafkaConsumer010<CreditScoreLogInfo> consumer = new FlinkKafkaConsumer010<>(topic, creditScoreLogSchema, props);
+            DataStreamSource<CreditScoreLogInfo> data = env.addSource(consumer);
 
-        SingleOutputStreamOperator<CreditScoreLogInfo> distinctRes = data.filter((FilterFunction<CreditScoreLogInfo>) creditScoreLogInfo -> {
-            if (null != creditScoreLogInfo) {
-                String md5Log = EncodeUtils.md5Encode(creditScoreLogInfo.getOrigLog());
-                boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.CREDIT_SCORE_REDIS_LOG_COUNT_MD5_KEY + md5Log);
-                if (isMember) {
-                    return false;
-                } else {
-                    RedisClusterUtils.setValue(CONSTANTS.CREDIT_SCORE_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.CREDIT_SCORE_REDIS_LOG_COUNT_MD5_KEY);
-                    RedisClusterUtils.setExpire(CONSTANTS.CREDIT_SCORE_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.CREDIT_SCORE_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS);
+            SingleOutputStreamOperator<CreditScoreLogInfo> distinctRes = data.filter((FilterFunction<CreditScoreLogInfo>) creditScoreLogInfo -> {
+                if (null != creditScoreLogInfo) {
+                    if (creditScoreLogInfo.getTime() == null || creditScoreLogInfo.getEvent() == null || creditScoreLogInfo.getAppKey() == null) {
+                        logger.info("JSON日志数据异常！" + creditScoreLogInfo.getOrigLog());
+                        return false;
+                    }
+                    String md5Log = EncodeUtils.md5Encode(creditScoreLogInfo.getOrigLog());
+                    boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.CREDIT_SCORE_REDIS_LOG_COUNT_MD5_KEY + md5Log);
+                    if (isMember) {
+                        return false;
+                    } else {
+                        RedisClusterUtils.setValue(CONSTANTS.CREDIT_SCORE_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.CREDIT_SCORE_REDIS_LOG_COUNT_MD5_KEY);
+                        RedisClusterUtils.setExpire(CONSTANTS.CREDIT_SCORE_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.CREDIT_SCORE_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS);
+                    }
+                    return true;
                 }
-                return true;
-            }
-            return false;
-        }).setParallelism(1);
+                return false;
+            }).setParallelism(1);
 
-        WindowedStream<CreditScoreAmount, Tuple2<String, String>, TimeWindow> mapRes = distinctRes.map((MapFunction<CreditScoreLogInfo, CreditScoreAmount>) creditScoreLogInfo -> {
-            CreditScoreAmount creditScoreAmount = new CreditScoreAmount();
-            creditScoreAmount.setCollectTime(new Timestamp(new Date().getTime()));
-            creditScoreAmount.setEvent(creditScoreLogInfo.getEvent());
-            creditScoreAmount.setAppKey(creditScoreLogInfo.getAppKey());
-            creditScoreAmount.setTransferTimes(CONSTANTS.NUMBER_1);
-            return creditScoreAmount;
-        }).returns(TypeInformation.of(new TypeHint<CreditScoreAmount>() {}))
-          .keyBy(new KeySelector<CreditScoreAmount, Tuple2<String, String>>() {
-            @Override
-            public Tuple2<String, String> getKey(CreditScoreAmount creditScoreAmount) {
-                Tuple2<String, String> tuple2 = new Tuple2<>();
-                tuple2.f0 = creditScoreAmount.getEvent();
-                tuple2.f1 = creditScoreAmount.getAppKey();
-                return tuple2;
-            }
-        }).timeWindow(Time.seconds(parameterTool.getLong(CONFIGS.CREDIT_SCORE_COUNT_TUMBLING_WINDOW_SIZE)));
+            WindowedStream<CreditScoreAmount, Tuple2<String, String>, TimeWindow> mapRes = distinctRes.map((MapFunction<CreditScoreLogInfo, CreditScoreAmount>) creditScoreLogInfo -> {
+                CreditScoreAmount creditScoreAmount = new CreditScoreAmount();
+                creditScoreAmount.setCollectTime(new Timestamp(Long.valueOf(creditScoreLogInfo.getTime())));
+                creditScoreAmount.setEvent(creditScoreLogInfo.getEvent());
+                creditScoreAmount.setAppKey(creditScoreLogInfo.getAppKey());
+                creditScoreAmount.setTransferTimes(CONSTANTS.NUMBER_1);
+                return creditScoreAmount;
+            }).returns(TypeInformation.of(new TypeHint<CreditScoreAmount>() {})).assignTimestampsAndWatermarks(new CreditScoreAmountCountWatermark())
+                    .keyBy(new KeySelector<CreditScoreAmount, Tuple2<String, String>>() {
+                        @Override
+                        public Tuple2<String, String> getKey(CreditScoreAmount creditScoreAmount) {
+                            Tuple2<String, String> tuple2 = new Tuple2<>();
+                            tuple2.f0 = creditScoreAmount.getEvent();
+                            tuple2.f1 = creditScoreAmount.getAppKey();
+                            return tuple2;
+                        }
+                    }).timeWindow(Time.seconds(parameterTool.getLong(CONFIGS.CREDIT_SCORE_COUNT_TUMBLING_WINDOW_SIZE)))
+                    .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.CREDIT_SCORE_COUNT_MAX_ALLOWED_LATENESS)));
 
-        DataStream<CreditScoreAmount> reduceRes = mapRes.reduce((ReduceFunction<CreditScoreAmount>) (s1, s2) -> {
-            s1.setTransferTimes(s1.getTransferTimes() + s2.getTransferTimes());
-            return s1;
-        });
+            DataStream<CreditScoreAmount> reduceRes = mapRes.reduce((ReduceFunction<CreditScoreAmount>) (s1, s2) -> {
+                s1.setTransferTimes(s1.getTransferTimes() + s2.getTransferTimes());
+                return s1;
+            });
 
-        reduceRes.addSink(new CreditScoreAmountCountSink()).name(CreditScoreAmountCountSink.class.getSimpleName());
+            reduceRes.addSink(new CreditScoreAmountCountSink()).name(CreditScoreAmountCountSink.class.getSimpleName());
 
-        env.execute(ClassName);
-
+            env.execute(ClassName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
