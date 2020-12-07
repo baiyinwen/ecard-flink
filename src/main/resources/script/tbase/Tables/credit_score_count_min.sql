@@ -4,8 +4,8 @@ create table public.credit_score_count_min
 (
     id               bigserial not null primary key,
     collect_time     timestamp without time zone,
-    event            varchar(32),
-    app_key          varchar(64),
+    event            varchar(64),
+    app_key          varchar(128),
     transfer_times   integer,
     create_time      timestamp without time zone default now(),
     status           integer default 1
