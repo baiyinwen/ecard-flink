@@ -13,6 +13,7 @@ public class BillingTransfer implements Serializable {
 
     private int id;
     private Timestamp collectTime;
+    private String event;
     private String channelNo;
     private Integer transferTimes;
     private Timestamp createTime;
@@ -32,6 +33,14 @@ public class BillingTransfer implements Serializable {
 
     public void setCollectTime(Timestamp collectTime) {
         this.collectTime = collectTime;
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
     }
 
     public String getChannelNo() {
@@ -71,10 +80,12 @@ public class BillingTransfer implements Serializable {
         return "BillingTransfer{" +
                 "id=" + id +
                 ", collectTime=" + collectTime +
+                ", event='" + event + '\'' +
                 ", channelNo='" + channelNo + '\'' +
                 ", transferTimes=" + transferTimes +
                 ", createTime=" + createTime +
                 ", status=" + status +
                 '}';
     }
+
 }

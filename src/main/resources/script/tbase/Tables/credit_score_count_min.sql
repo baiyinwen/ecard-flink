@@ -1,5 +1,5 @@
 --- 每分钟信用分统计次数
-drop table if exists public.credit_score_count_min;
+--- drop table if exists public.credit_score_count_min;
 create table public.credit_score_count_min
 (
     id               bigserial not null primary key,

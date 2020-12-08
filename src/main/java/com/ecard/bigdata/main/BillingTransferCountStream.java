@@ -14,10 +14,12 @@ import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
@@ -63,39 +65,45 @@ public class BillingTransferCountStream {
         FlinkKafkaConsumer010<JsonLogInfo> consumer = new FlinkKafkaConsumer010<>(topic, jsonLogSchema, props);
         DataStreamSource<JsonLogInfo> data = env.addSource(consumer);
 
-        WindowedStream<BillingTransfer, String, TimeWindow> timeWindowRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
+        SingleOutputStreamOperator<JsonLogInfo> distinctRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
-                String event = jsonLogInfo.getEvent() == null ? "" : jsonLogInfo.getEvent();
-                String channel = jsonLogInfo.getChannelNo() == null ? "" : jsonLogInfo.getChannelNo();
-                if (CONSTANTS.EVENT_BILLING_LOG_AUTH_PHOTO.equals(event) && !channel.isEmpty()) {
-                    String md5Log = EncodeUtils.md5Encode(jsonLogInfo.getOrigLog());
-                    boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.BILLING_REDIS_LOG_COUNT_MD5_KEY + md5Log);
-                    if (isMember) {
-                        return false;
-                    } else {
-                        RedisClusterUtils.setValue(CONSTANTS.BILLING_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.BILLING_REDIS_LOG_COUNT_MD5_KEY);
-                        RedisClusterUtils.setExpire(CONSTANTS.BILLING_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.BILLING_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS);
-                    }
-                    return true;
+                if (jsonLogInfo.getTime() == null || jsonLogInfo.getEvent() == null || jsonLogInfo.getChannelNo() == null) {
+                    logger.info("JSON日志数据异常！" + jsonLogInfo.getOrigLog());
+                    return false;
                 }
+                String md5Log = EncodeUtils.md5Encode(jsonLogInfo.getOrigLog());
+                boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.BILLING_REDIS_LOG_COUNT_MD5_KEY + md5Log);
+                if (isMember) {
+                    return false;
+                } else {
+                    RedisClusterUtils.setValue(CONSTANTS.BILLING_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.BILLING_REDIS_LOG_COUNT_MD5_KEY);
+                    RedisClusterUtils.setExpire(CONSTANTS.BILLING_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.BILLING_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS);
+                }
+                return true;
             }
             return false;
-        }).map((MapFunction<JsonLogInfo, BillingTransfer>) jsonLogInfo -> {
+        }).setParallelism(1);
+
+        WindowedStream<BillingTransfer, Tuple2<String, String>, TimeWindow> mapRes = distinctRes.map((MapFunction<JsonLogInfo, BillingTransfer>) jsonLogInfo -> {
             BillingTransfer billingTransfer = new BillingTransfer();
             billingTransfer.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
+            billingTransfer.setEvent(jsonLogInfo.getEvent());
             billingTransfer.setChannelNo(jsonLogInfo.getChannelNo());
             billingTransfer.setTransferTimes(CONSTANTS.NUMBER_1);
             return billingTransfer;
-        }).returns(TypeInformation.of(new TypeHint<BillingTransfer>() {})).assignTimestampsAndWatermarks(new BillingTransferCountWatermark()).setParallelism(1)
-          .keyBy(new KeySelector<BillingTransfer, String>() {
+        }).returns(TypeInformation.of(new TypeHint<BillingTransfer>() {})).assignTimestampsAndWatermarks(new BillingTransferCountWatermark())
+          .keyBy(new KeySelector<BillingTransfer, Tuple2<String, String>>() {
             @Override
-            public String getKey(BillingTransfer billingTransfer) throws Exception {
-                return billingTransfer.getChannelNo();
+            public Tuple2<String, String> getKey(BillingTransfer billingTransfer) throws Exception {
+                Tuple2<String, String> tuple2 = new Tuple2<>();
+                tuple2.f0 = billingTransfer.getEvent();
+                tuple2.f1 = billingTransfer.getChannelNo();
+                return tuple2;
             }
         }).timeWindow(Time.seconds(parameterTool.getLong(CONFIGS.BILLING_TRANSFER_TUMBLING_WINDOW_SIZE)))
           .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.BILLING_TRANSFER_MAX_ALLOWED_LATENESS)));
 
-        DataStream<BillingTransfer> reduceRes = timeWindowRes
+        DataStream<BillingTransfer> reduceRes = mapRes
         .reduce((ReduceFunction<BillingTransfer>) (s1, s2) -> {
             s1.setTransferTimes(s1.getTransferTimes() + s2.getTransferTimes());
             return s1;

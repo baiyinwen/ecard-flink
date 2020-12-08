@@ -27,9 +27,14 @@ public class JsonLogSchema implements DeserializationSchema<JsonLogInfo>, Serial
 
         String origLog = new String(bytes);
         if (!origLog.isEmpty()) {
-            JsonLogInfo jsonLogInfo = gson.fromJson(origLog, JsonLogInfo.class);
-            jsonLogInfo.setOrigLog(origLog);
-            return jsonLogInfo;
+            try {
+                JsonLogInfo jsonLogInfo = gson.fromJson(origLog, JsonLogInfo.class);
+                jsonLogInfo.setOrigLog(origLog);
+                return jsonLogInfo;
+            } catch (Exception e) {
+                logger.error("JSON日志转对象异常！" + origLog);
+                return null;
+            }
         }
         logger.info("is empty");
         return null;

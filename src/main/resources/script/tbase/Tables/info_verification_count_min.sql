@@ -1,5 +1,5 @@
 --- 每分钟信息核验统计次数
-drop table if exists public.info_verification_count_min;
+--- drop table if exists public.info_verification_count_min;
 create table public.info_verification_count_min
 (
     id               bigserial not null primary key,
