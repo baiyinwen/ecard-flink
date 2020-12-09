@@ -77,7 +77,7 @@ public class InfoVerifyAmount implements Serializable {
 
     @Override
     public String toString() {
-        return "CreditScoreAmount{" +
+        return "InfoVerifyAmount{" +
                 "id=" + id +
                 ", collectTime=" + collectTime +
                 ", event='" + event + '\'' +
@@ -87,4 +87,5 @@ public class InfoVerifyAmount implements Serializable {
                 ", status=" + status +
                 '}';
     }
+
 }
