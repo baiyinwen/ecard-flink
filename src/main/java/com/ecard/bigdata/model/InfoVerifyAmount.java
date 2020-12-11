@@ -4,17 +4,17 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- * @Description 签发数据分析分钟
+ * @Description
  * @Author WangXueDong
- * @Date 2020/9/14 15:10
+ * @Date 2020/12/3 17:38
  * @Version 1.0
  **/
-public class BillingTransfer implements Serializable {
+public class InfoVerifyAmount implements Serializable {
 
     private int id;
     private Timestamp collectTime;
     private String event;
-    private String channelNo;
+    private String appKey;
     private Integer transferTimes;
     private Timestamp createTime;
     private int status = 1;
@@ -43,12 +43,12 @@ public class BillingTransfer implements Serializable {
         this.event = event;
     }
 
-    public String getChannelNo() {
-        return channelNo;
+    public String getAppKey() {
+        return appKey;
     }
 
-    public void setChannelNo(String channelNo) {
-        this.channelNo = channelNo;
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
     }
 
     public Integer getTransferTimes() {
@@ -77,11 +77,11 @@ public class BillingTransfer implements Serializable {
 
     @Override
     public String toString() {
-        return "BillingTransfer{" +
+        return "InfoVerifyAmount{" +
                 "id=" + id +
                 ", collectTime=" + collectTime +
                 ", event='" + event + '\'' +
-                ", channelNo='" + channelNo + '\'' +
+                ", appKey='" + appKey + '\'' +
                 ", transferTimes=" + transferTimes +
                 ", createTime=" + createTime +
                 ", status=" + status +

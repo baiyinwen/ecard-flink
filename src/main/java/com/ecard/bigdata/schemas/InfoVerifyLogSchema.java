@@ -1,6 +1,6 @@
 package com.ecard.bigdata.schemas;
 
-import com.ecard.bigdata.bean.JsonLogInfo;
+import com.ecard.bigdata.bean.InfoVerifyLogInfo;
 import com.google.gson.Gson;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.serialization.SerializationSchema;
@@ -13,24 +13,24 @@ import java.nio.charset.Charset;
 /**
  * @Description
  * @Author WangXueDong
- * @Date 2020/4/13 10:49
+ * @Date 2020/12/03 15:24
  * @Version 1.0
  **/
-public class JsonLogSchema implements DeserializationSchema<JsonLogInfo>, SerializationSchema<JsonLogInfo> {
+public class InfoVerifyLogSchema implements DeserializationSchema<InfoVerifyLogInfo>, SerializationSchema<InfoVerifyLogInfo> {
 
-    private static Logger logger = LoggerFactory.getLogger(JsonLogSchema.class);
+    private static Logger logger = LoggerFactory.getLogger(InfoVerifyLogSchema.class);
 
     private static final Gson gson = new Gson();
 
     @Override
-    public JsonLogInfo deserialize(byte[] bytes) {
+    public InfoVerifyLogInfo deserialize(byte[] bytes) {
 
         String origLog = new String(bytes);
         if (!origLog.isEmpty()) {
             try {
-                JsonLogInfo jsonLogInfo = gson.fromJson(origLog, JsonLogInfo.class);
-                jsonLogInfo.setOrigLog(origLog);
-                return jsonLogInfo;
+                InfoVerifyLogInfo infoVerifyLogInfo = gson.fromJson(origLog, InfoVerifyLogInfo.class);
+                infoVerifyLogInfo.setOrigLog(origLog);
+                return infoVerifyLogInfo;
             } catch (Exception e) {
                 logger.error("JSON日志转对象异常！" + origLog);
                 return null;
@@ -41,20 +41,20 @@ public class JsonLogSchema implements DeserializationSchema<JsonLogInfo>, Serial
     }
 
     @Override
-    public boolean isEndOfStream(JsonLogInfo jsonLogInfo) {
+    public boolean isEndOfStream(InfoVerifyLogInfo infoVerifyLogInfo) {
 
         return false;
     }
 
     @Override
-    public TypeInformation<JsonLogInfo> getProducedType() {
+    public TypeInformation<InfoVerifyLogInfo> getProducedType() {
 
-        return TypeInformation.of(JsonLogInfo.class);
+        return TypeInformation.of(InfoVerifyLogInfo.class);
     }
 
     @Override
-    public byte[] serialize(JsonLogInfo jsonLogInfo) {
+    public byte[] serialize(InfoVerifyLogInfo infoVerifyLogInfo) {
 
-        return gson.toJson(jsonLogInfo).getBytes(Charset.forName("UTF-8"));
+        return gson.toJson(infoVerifyLogInfo).getBytes(Charset.forName("UTF-8"));
     }
 }

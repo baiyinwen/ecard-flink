@@ -44,9 +44,10 @@ public class BillingTransferCountSink extends RichSinkFunction<BillingTransfer> 
     private void saveBillingTransferCount(BillingTransfer billingTransfer) {
 
         billingTransfer.setCollectTime(DateTimeUtils.getIntervalBasicTime(billingTransfer.getCollectTime().getTime(), ConfigUtils.getLong(CONFIGS.BILLING_TRANSFER_TUMBLING_WINDOW_SIZE)));
-        String sql = "INSERT INTO billing_transfer_count_min(COLLECT_TIME, CHANNEL_NO, TRANSFER_TIMES) VALUES(?, ?, ?) ";
+        String sql = "INSERT INTO billing_transfer_count_min(COLLECT_TIME, EVENT, CHANNEL_NO, TRANSFER_TIMES) VALUES(?, ?, ?, ?) ";
         Object[] params = new Object[]{
                 billingTransfer.getCollectTime(),
+                billingTransfer.getEvent(),
                 billingTransfer.getChannelNo(),
                 billingTransfer.getTransferTimes()};
         logger.info("ready to save -- " + billingTransfer.toString());

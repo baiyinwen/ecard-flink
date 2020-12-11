@@ -50,4 +50,12 @@ public class CONSTANTS {
     public final static String BILLING_REDIS_LOG_COUNT_MD5_KEY = "billingTransferCountMd5";
     public final static int BILLING_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS = 86400;
 
+    /*信用分调用次数redis去重前缀阶过期时间*/
+    public final static String CREDIT_SCORE_REDIS_LOG_COUNT_MD5_KEY = "creditScoreLogCountMd5";
+    public final static int CREDIT_SCORE_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS = 86400;
+
+    /*电子社保卡信息核验调用次数redis去重前缀阶过期时间*/
+    public final static String INFO_VERIFICATION_REDIS_LOG_COUNT_MD5_KEY = "infoVerificationLogCountMd5";
+    public final static int INFO_VERIFICATION_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS = 86400;
+
 }
