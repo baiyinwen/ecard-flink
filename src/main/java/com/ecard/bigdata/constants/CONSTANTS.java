@@ -24,8 +24,9 @@ public class CONSTANTS {
     public final static int NUMBER_1 = 1;
 
     public final static String EVENT_ESSC_LOG_SIGN = "essc_log_sign";//ecard日志签发日志的event
-    public final static String EVENT_BILLING_LOG_AUTH_PHOTO = "auth_photo";//计费系统日志的event
+    public final static String EVENT_ESSC_LOG2_SIGN_PERSON = "essc_log2_sign_person";//ecard日志签发日志的event
     public final static String EVENT_ESSC_LOG_SIGN_ONE_STEP = "essc_log_sign_add_sign";//一键签发日志的event
+    public final static String EVENT_ESSC_LOG2_SIGN_ONE_STEP = "essc_log2_sign_add_sign";//一键签发日志的event
 
     public final static String EVENT_MSG_CODE_KEY = "msgCode";//ecard日志调用结果key
     public final static String EVENT_MSG_CODE_VALUE = "000000";//ecard日志调用结果value
