@@ -1,6 +1,5 @@
 package com.ecard.bigdata.main;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ecard.bigdata.bean.JsonLogInfo;
 import com.ecard.bigdata.constants.CONFIGS;
@@ -19,12 +18,14 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -63,30 +64,42 @@ public class SignAmountAlterStream {
         consumer.setStartFromLatest();
         DataStreamSource<JsonLogInfo> data = env.addSource(consumer);
 
-        DataStream<SignAmount> mapRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
+        SingleOutputStreamOperator<JsonLogInfo> filterRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
                 String event = jsonLogInfo.getEvent();
                 String inputStr = jsonLogInfo.getInput().toString();
                 String outputStr = jsonLogInfo.getOutput().toString();
-                if (!JsonUtils.isJsonObject(inputStr) || !JsonUtils.isJsonObject(outputStr)) {
+                if (!JsonUtils.isValidObject(inputStr) || !JsonUtils.isValidObject(outputStr)) {
                     return false;
                 }
-                JSONObject outputJson = JSON.parseObject(outputStr);
-                if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
+                if (jsonLogInfo.getOutput() instanceof Map) {
+                    outputStr = JSONObject.toJSONString(jsonLogInfo.getOutput());
+                }
+                JSONObject outputJson = JSONObject.parseObject(outputStr);
+                if ((CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event) || CONSTANTS.EVENT_ESSC_LOG_SIGN_ONE_STEP.equals(event) || CONSTANTS.EVENT_ESSC_LOG2_SIGN_PERSON.equals(event) || CONSTANTS.EVENT_ESSC_LOG2_SIGN_ONE_STEP.equals(event))
                         && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
-                    String md5Log = EncodeUtils.md5Encode(jsonLogInfo.getOrigLog());
-                    boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.SIGN_REDIS_LOG_ALTER_MD5_KEY + md5Log);
-                    if (isMember) {
-                        return false;
-                    } else {
-                        RedisClusterUtils.setValue(CONSTANTS.SIGN_REDIS_LOG_ALTER_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_ALTER_MD5_KEY);
-                        RedisClusterUtils.setExpire(CONSTANTS.SIGN_REDIS_LOG_ALTER_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_ALTER_KEY_EXPIRE_SECONDS);
-                    }
                     return true;
                 }
             }
             return false;
-        }).map((MapFunction<JsonLogInfo, SignAmount>) jsonLogInfo -> {
+        });
+
+        SingleOutputStreamOperator<JsonLogInfo> distinctRes = filterRes.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
+            if (null != jsonLogInfo) {
+                String md5Log = EncodeUtils.md5Encode(jsonLogInfo.getOrigLog());
+                boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.SIGN_REDIS_LOG_ALTER_MD5_KEY + md5Log);
+                if (isMember) {
+                    return false;
+                } else {
+                    RedisClusterUtils.setValue(CONSTANTS.SIGN_REDIS_LOG_ALTER_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_ALTER_MD5_KEY);
+                    RedisClusterUtils.setExpire(CONSTANTS.SIGN_REDIS_LOG_ALTER_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_ALTER_KEY_EXPIRE_SECONDS);
+                }
+                return true;
+            }
+            return false;
+        }).setParallelism(1);
+
+        DataStream<SignAmount> mapRes = distinctRes.map((MapFunction<JsonLogInfo, SignAmount>) jsonLogInfo -> {
             SignAmount signAmount = new SignAmount();
             signAmount.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
             signAmount.setTransferTimes(CONSTANTS.NUMBER_1);
@@ -95,7 +108,7 @@ public class SignAmountAlterStream {
 
         DataStream<SignAmount> reduceRes = mapRes.assignTimestampsAndWatermarks(new SignAmountAlterWatermark())
                 .timeWindowAll(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_ALTER_TUMBLING_WINDOW_SIZE)))
-                .allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_ALTER_MAX_ALLOWED_LATENESS)))
+                //.allowedLateness(Time.seconds(parameterTool.getLong(CONFIGS.SIGN_ALTER_MAX_ALLOWED_LATENESS)))
                 .reduce((ReduceFunction<SignAmount>) (s1, s2) -> {
                     s1.setTransferTimes(s1.getTransferTimes() + s2.getTransferTimes());
                     return s1;
