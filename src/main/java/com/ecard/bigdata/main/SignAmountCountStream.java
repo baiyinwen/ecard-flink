@@ -69,23 +69,24 @@ public class SignAmountCountStream {
         WindowedStream<SignAmount, Tuple2<String, String>, TimeWindow> timeWindowRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
                 String event = jsonLogInfo.getEvent();
-                String inputStr = jsonLogInfo.getInput().toString();
-                String outputStr = jsonLogInfo.getOutput().toString();
-                if (!JsonUtils.isJsonObject(inputStr) || !JsonUtils.isJsonObject(outputStr)) {
-                    return false;
-                }
-                JSONObject outputJson = JSON.parseObject(outputStr);
-                if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)
-                        && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
-                    String md5Log = EncodeUtils.md5Encode(jsonLogInfo.getOrigLog());
-                    boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY + md5Log);
-                    if (isMember) {
+                if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event)) {
+                    String inputStr = jsonLogInfo.getInput().toString();
+                    String outputStr = jsonLogInfo.getOutput().toString();
+                    if (!JsonUtils.isJsonObject(inputStr) || !JsonUtils.isJsonObject(outputStr)) {
                         return false;
-                    } else {
-                        RedisClusterUtils.setValue(CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY);
-                        RedisClusterUtils.setExpire(CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS);
                     }
-                    return true;
+                    JSONObject outputJson = JSON.parseObject(outputStr);
+                    if (CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
+                        String md5Log = EncodeUtils.md5Encode(jsonLogInfo.getOrigLog());
+                        boolean isMember = RedisClusterUtils.isExistsKey(CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY + md5Log);
+                        if (isMember) {
+                            return false;
+                        } else {
+                            RedisClusterUtils.setValue(CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY);
+                            RedisClusterUtils.setExpire(CONSTANTS.SIGN_REDIS_LOG_COUNT_MD5_KEY + md5Log, CONSTANTS.SIGN_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS);
+                        }
+                        return true;
+                    }
                 }
             }
             return false;

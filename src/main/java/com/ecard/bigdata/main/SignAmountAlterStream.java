@@ -67,18 +67,24 @@ public class SignAmountAlterStream {
         SingleOutputStreamOperator<JsonLogInfo> filterRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
                 String event = jsonLogInfo.getEvent();
-                String inputStr = jsonLogInfo.getInput().toString();
-                String outputStr = jsonLogInfo.getOutput().toString();
-                if (!JsonUtils.isValidObject(inputStr) || !JsonUtils.isValidObject(outputStr)) {
-                    return false;
-                }
-                if (jsonLogInfo.getOutput() instanceof Map) {
-                    outputStr = JSONObject.toJSONString(jsonLogInfo.getOutput());
-                }
-                JSONObject outputJson = JSONObject.parseObject(outputStr);
-                if ((CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event) || CONSTANTS.EVENT_ESSC_LOG_SIGN_ONE_STEP.equals(event) || CONSTANTS.EVENT_ESSC_LOG2_SIGN_PERSON.equals(event) || CONSTANTS.EVENT_ESSC_LOG2_SIGN_ONE_STEP.equals(event))
-                        && CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
-                    return true;
+                if (CONSTANTS.EVENT_ESSC_LOG_SIGN.equals(event) || CONSTANTS.EVENT_ESSC_LOG_SIGN_ONE_STEP.equals(event) || CONSTANTS.EVENT_ESSC_LOG2_SIGN_PERSON.equals(event) || CONSTANTS.EVENT_ESSC_LOG2_SIGN_ONE_STEP.equals(event)) {
+                    String outputStr = jsonLogInfo.getOutput().toString();
+                    JSONObject outputJson;
+                    try {
+                        if (jsonLogInfo.getOutput() instanceof Map) {
+                            outputStr = JSONObject.toJSONString(jsonLogInfo.getOutput());
+                        }
+                        outputJson = JSONObject.parseObject(outputStr);
+                    } catch (Exception e) {
+                        logger.error(jsonLogInfo.toString() + " --- 日志解析异常" + e.getMessage());
+                        e.printStackTrace();
+                        return  false;
+                    }
+                    if (outputJson != null) {
+                        if (CONSTANTS.EVENT_MSG_CODE_VALUE.equals(outputJson.getString(CONSTANTS.EVENT_MSG_CODE_KEY))) {
+                            return true;
+                        }
+                    }
                 }
             }
             return false;
