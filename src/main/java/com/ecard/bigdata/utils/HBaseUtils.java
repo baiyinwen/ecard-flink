@@ -7,6 +7,7 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.conf.Configuration;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Description
@@ -40,6 +41,14 @@ public class HBaseUtils {
             BufferedMutatorParams params = new BufferedMutatorParams(TableName.valueOf(tableName));
             params.writeBufferSize(WRITE_SIZE);
             mutator = connection.getBufferedMutator(params);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void putData(List<Put> list) {
+        try {
+            mutator.mutate(list);
         } catch (IOException e) {
             e.printStackTrace();
         }
