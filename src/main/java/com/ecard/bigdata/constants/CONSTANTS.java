@@ -59,4 +59,8 @@ public class CONSTANTS {
     public final static String INFO_VERIFICATION_REDIS_LOG_COUNT_MD5_KEY = "infoVerificationLogCountMd5";
     public final static int INFO_VERIFICATION_REDIS_LOG_COUNT_KEY_EXPIRE_SECONDS = 86400;
 
+    /*展验码统计量报警redis去重前缀及过期时间*/
+    public final static String QRCODE_REDIS_LOG_ALARM_MD5_KEY = "qrCodeLogAlarmMd5";
+    public final static int QRCODE_REDIS_LOG_ALARM_KEY_EXPIRE_SECONDS = 3600;
+
 }

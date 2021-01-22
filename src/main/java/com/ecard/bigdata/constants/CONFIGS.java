@@ -92,4 +92,11 @@ public class CONFIGS {
     public final static String INFO_VERIFICATION_COUNT_MAX_OUT_OF_ORDER = "info.verification.count.max.out.of.order";
     public final static String INFO_VERIFICATION_COUNT_MAX_ALLOWED_LATENESS = "info.verification.count.max.allowed.lateness";
 
+    /*展验码统计量*/
+    public final static String QRCODE_ALARM_KAFKA_TOPIC = "qrcode.alarm.kafka.topic";
+    public final static String QRCODE_ALARM_LOG_EVENTS = "qrcode.alarm.log.events";
+    public final static String QRCODE_ALARM_TUMBLING_WINDOW_SIZE = "qrcode.alarm.tumbling.window.size";
+    public final static String QRCODE_ALARM_MAX_OUT_OF_ORDER = "qrcode.alarm.max.out.of.order";
+    public final static String QRCODE_ALARM_MAX_ALLOWED_LATENESS = "qrcode.alarm.max.allowed.lateness";
+
 }
