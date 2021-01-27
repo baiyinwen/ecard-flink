@@ -43,12 +43,12 @@ public class QrCodeAmountAlarmSink extends RichSinkFunction<QrCodeAmount> {
     @Override
     public void invoke(QrCodeAmount qrCodeAmount, Context context) {
 
-        pushSignAmountAlter(qrCodeAmount);
+        pushQrCodeAmountAlarm(qrCodeAmount);
     }
 
-    private void pushSignAmountAlter(QrCodeAmount qrCodeAmount) {
+    private void pushQrCodeAmountAlarm(QrCodeAmount qrCodeAmount) {
 
-        qrCodeAmount.setCollectTime(DateTimeUtils.getIntervalBasicTime(qrCodeAmount.getCollectTime().getTime(), ConfigUtils.getLong(CONFIGS.SIGN_ALTER_TUMBLING_WINDOW_SIZE)));
+        qrCodeAmount.setCollectTime(DateTimeUtils.getIntervalBasicTime(qrCodeAmount.getCollectTime().getTime(), ConfigUtils.getLong(CONFIGS.QRCODE_ALARM_TUMBLING_WINDOW_SIZE)));
         String metric = qrCodeAmount.getEvent();
         long timestamp = qrCodeAmount.getCollectTime().getTime();
         float value = qrCodeAmount.getTransferTimes();

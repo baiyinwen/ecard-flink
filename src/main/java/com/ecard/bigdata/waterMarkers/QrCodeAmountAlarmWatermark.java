@@ -3,7 +3,6 @@ package com.ecard.bigdata.waterMarkers;
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
 import com.ecard.bigdata.model.QrCodeAmount;
-import com.ecard.bigdata.model.SignAmount;
 import com.ecard.bigdata.utils.ConfigUtils;
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
 import org.apache.flink.streaming.api.watermark.Watermark;

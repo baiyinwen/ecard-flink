@@ -5,7 +5,6 @@ import com.ecard.bigdata.bean.JsonLogInfo;
 import com.ecard.bigdata.constants.CONFIGS;
 import com.ecard.bigdata.constants.CONSTANTS;
 import com.ecard.bigdata.model.QrCodeAmount;
-import com.ecard.bigdata.model.SignAmount;
 import com.ecard.bigdata.schemas.JsonLogSchema;
 import com.ecard.bigdata.sink.QrCodeAmountAlarmSink;
 import com.ecard.bigdata.utils.*;
