@@ -31,7 +31,12 @@ public class CONSTANTS {
     public final static String EVENT_MSG_CODE_KEY = "msgCode";//ecard日志调用结果key
     public final static String EVENT_MSG_CODE_VALUE = "000000";//ecard日志调用结果value
     public final static String EVENT_ESSC_LOG_SIGN_AAB_301 = "aab301";//ecard日志签发日志中签发地区行政划分码
+    public final static String EVENT_ESSC_LOG_CARD_REGIONNO = "signCardRegionNo";//ecard日志签发日志中签发地区行政划分码
     public final static String EVENT_ESSC_LOG_SIGN_SIGN_SEQ = "signSeq";//ecard日志后六位签发日志中签发地区行政划分码
+    public final static String EVENT_ESSC_LOG_SIGN_AAC002 = "aac002";//ecard日志身份证号
+    public final static String EVENT_ESSC_LOG_INPUT = "input";//INPUT日志
+    public final static String EVENT_ESSC_LOG_OUTPUT = "output";//outPUT日志
+    public final static String EVENT_ESSC_LOG_RESULT = "result";//result日志
 
     public final static String NGINX_STATUS_SUCCESS_VALUE = "200";//nginx日志调用成功码
 
@@ -42,6 +47,10 @@ public class CONSTANTS {
     /*签发量报警redis去重前缀及过期时间*/
     public final static String SIGN_REDIS_LOG_ALTER_MD5_KEY = "signLogAlterMd5";
     public final static int SIGN_REDIS_LOG_ALTER_KEY_EXPIRE_SECONDS = 86400;
+
+    /*签发明细redis去重前缀及过期时间*/
+    public final static String SIGN_REDIS_LOG_DETAIL_MD5_KEY = "signLogDetailMd5";
+    public final static int SIGN_REDIS_LOG_DETAIL_KEY_EXPIRE_SECONDS = 3600;
 
     /*接口调用时长redis去重前缀及过期时间*/
     public final static String COST_TIME_REDIS_LOG_MD5_KEY = "costTimeLogMd5";

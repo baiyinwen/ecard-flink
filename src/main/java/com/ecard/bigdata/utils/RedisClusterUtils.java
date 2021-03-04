@@ -23,6 +23,7 @@ public class RedisClusterUtils {
     private static String [] REDIS_HOSTS;
     private static String REDIS_PASSWORD;
     private static int REDIS_PORT = 6379;
+    //private static int REDIS_PORT = 7001;
 
     private static int REDIS_MAX_TOTAL = 10;
     private static int REDIS_MAX_IDLE = 5;
