@@ -10,7 +10,7 @@
 
     <properties>
         <!--运行环境：本地-dev、测试-pre、生产-pro-->
-        <execute.env>dev</execute.env>
+        <execute.env>pro</execute.env>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.binary.version>2.11</scala.binary.version>
         <flink.version>1.7.0</flink.version>
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.58</version>
+            <version>1.2.75</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
