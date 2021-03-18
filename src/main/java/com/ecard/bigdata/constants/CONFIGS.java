@@ -99,4 +99,10 @@ public class CONFIGS {
     public final static String QRCODE_ALARM_MAX_OUT_OF_ORDER = "qrcode.alarm.max.out.of.order";
     public final static String QRCODE_ALARM_MAX_ALLOWED_LATENESS = "qrcode.alarm.max.allowed.lateness";
 
+    /*照片拉取量占比签发量*/
+    public final static String PHOTO_RATIO_SIGN_ALARM_KAFKA_TOPIC = "photo.ratio.sign.alarm.kafka.topic";
+    public final static String PHOTO_RATIO_SIGN_ALARM_TUMBLING_WINDOW_SIZE = "photo.ratio.sign.alarm.tumbling.window.size";
+    public final static String PHOTO_RATIO_SIGN_ALARM_MAX_OUT_OF_ORDER = "photo.ratio.sign.alarm.max.out.of.order";
+    public final static String PHOTO_RATIO_SIGN_ALARM_MAX_ALLOWED_LATENESS = "photo.ratio.sign.alarm.max.allowed.lateness";
+
 }

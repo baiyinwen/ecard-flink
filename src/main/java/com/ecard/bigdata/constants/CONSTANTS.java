@@ -27,6 +27,7 @@ public class CONSTANTS {
     public final static String EVENT_ESSC_LOG2_SIGN_PERSON = "essc_log2_sign_person";//ecard日志签发日志的event
     public final static String EVENT_ESSC_LOG_SIGN_ONE_STEP = "essc_log_sign_add_sign";//一键签发日志的event
     public final static String EVENT_ESSC_LOG2_SIGN_ONE_STEP = "essc_log2_sign_add_sign";//一键签发日志的event
+    public final static String EVENT_ESSC_LOG_PHOTO = "essc_log2_service_page_photo";//照片拉取
 
     public final static String EVENT_MSG_CODE_KEY = "msgCode";//ecard日志调用结果key
     public final static String EVENT_MSG_CODE_VALUE = "000000";//ecard日志调用结果value
@@ -71,5 +72,9 @@ public class CONSTANTS {
     /*展验码统计量报警redis去重前缀及过期时间*/
     public final static String QRCODE_REDIS_LOG_ALARM_MD5_KEY = "qrCodeLogAlarmMd5";
     public final static int QRCODE_REDIS_LOG_ALARM_KEY_EXPIRE_SECONDS = 3600;
+
+    /*照片拉取量占比签发量报警redis去重前缀及过期时间*/
+    public final static String PHOTO_RATIO_SIGN_REDIS_LOG_ALARM_MD5_KEY = "photoRatioSignLogAlarmMd5";
+    public final static int PHOTO_RATIO_SIGN_REDIS_LOG_ALARM_KEY_EXPIRE_SECONDS = 3600;
 
 }
