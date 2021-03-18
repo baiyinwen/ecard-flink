@@ -51,7 +51,12 @@ public class PhotoRatioSignAlarmSink extends RichSinkFunction<PhotoRatioSign> {
 
         photoRatioSign.setCollectTime(DateTimeUtils.getIntervalBasicTime(photoRatioSign.getCollectTime().getTime(), ConfigUtils.getLong(CONFIGS.PHOTO_RATIO_SIGN_ALARM_TUMBLING_WINDOW_SIZE)));
         long timestamp = photoRatioSign.getCollectTime().getTime();
-        float value = photoRatioSign.getPhotoCount().floatValue()/photoRatioSign.getSignCount().floatValue();
+        float value;
+        if (photoRatioSign.getSignCount() != 0) {
+            value = photoRatioSign.getPhotoCount().floatValue()/photoRatioSign.getSignCount().floatValue();
+        } else {
+            value = photoRatioSign.getPhotoCount();
+        }
         photoRatioSign.setResult(value);
         logger.info("ready to push -- " + photoRatioSign.toString());
         pushToFalconUtils.sendInfoToFalcon(endpoint, metric, timestamp, step, value, counterType, tags);
