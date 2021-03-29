@@ -21,13 +21,10 @@ public class CreditScoreSchema implements KeyedDeserializationSchema<CreditScore
 
     @Override
     public CreditScore deserialize(byte[] keyBytes, byte[] valueBytes, String topic, int partition, long offset) {
-        //String key = new String(keyBytes);
         String value = new String(valueBytes);
         if (!value.isEmpty()) {
             String[] data = value.split(",");
             CreditScore creditScore = new CreditScore();
-            //creditScore.setTopic(topic);
-            //creditScore.setKey(key);
             creditScore.setCreditID(data[0]);
             creditScore.setScore(data[1]);
             creditScore.setTime(data[2]);
