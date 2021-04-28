@@ -107,7 +107,7 @@ public class SignDetailStream {
             JSONObject outputObj = Obj.getJSONObject(CONSTANTS.EVENT_ESSC_LOG_OUTPUT);
 
             SignDetail signDetail = new SignDetail();
-            signDetail.setAac002(EncodeUtils.md5Encode(inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_AAC002)));
+            signDetail.setAac002(EncodeUtils.md5Encode(inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_AAC002)==null?"":CONSTANTS.EVENT_ESSC_LOG_SIGN_AAC002));
             signDetail.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
             signDetail.setChannelNo(jsonLogInfo.getChannelNo());
             String cardRegionCode = inputObj.getString(CONSTANTS.EVENT_ESSC_LOG_SIGN_AAB_301);

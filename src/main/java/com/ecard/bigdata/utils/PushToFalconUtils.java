@@ -8,6 +8,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,9 +70,9 @@ public class PushToFalconUtils {
             getHttpClient();
             response = httpClient.execute(post);
             if(response.getStatusLine().getStatusCode() == 200) {
-                logger.info("push to open-falcon successfully --- " + sendInfo.toString());
+                logger.info("push to open-falcon successfully --- " + EntityUtils.toString(stringEntity));
             } else {
-                logger.info("push to open-falcon failed --- " + sendInfo.toString());
+                logger.info("push to open-falcon failed --- " + EntityUtils.toString(stringEntity));
             }
         } catch (IOException e) {
             e.printStackTrace();

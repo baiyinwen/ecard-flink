@@ -10,27 +10,9 @@ import java.io.Serializable;
  **/
 public class CreditScore implements Serializable {
 
-    private String topic;
-    private String key;
-    private String creditID;
-    private String score;
-    private String time;
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
+    private String creditID = "";
+    private String score = "";
+    private String time = "";
 
     public String getCreditID() {
         return creditID;
@@ -58,7 +40,7 @@ public class CreditScore implements Serializable {
 
     @Override
     public String toString() {
-        return topic + "," + key + ","+ creditID + "," + score + ","+ time;
+        return creditID + "," + score + ","+ time;
     }
 
 }
