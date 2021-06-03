@@ -10,7 +10,7 @@
 
     <properties>
         <!--运行环境：本地-dev、测试-pre、生产-pro-->
-        <execute.env>pro</execute.env>
+        <execute.env>pre</execute.env>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.binary.version>2.11</scala.binary.version>
         <flink.version>1.7.0</flink.version>
@@ -85,6 +85,24 @@
             <version>4.5.6</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore-nio</artifactId>
+            <version>4.4.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpasyncclient</artifactId>
+            <version>4.1.4</version>
+        </dependency>
+
+        <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>3.0.1</version>
@@ -110,6 +128,33 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.11</version>
         </dependency>
+
+        <!-- elasticsearch connector -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-elasticsearch6_2.11</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.8</version>
+        </dependency>
+
+        <!-- jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.11.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>6.5.2</version>
+        </dependency>
+
 
 
     </dependencies>
@@ -187,6 +232,13 @@
                                 <includes>
                                     <!--添加依赖-->
                                     <!--<include>${groupId}:${artifactId}</include>-->
+                                    <include>commons-codec:commons-codec</include>
+<!--                                    <include>org.apache.flink:flink-connector-elasticsearch6_2.11</include>-->
+                                    <include>org.apache.flink:flink-connector-elasticsearch-base_2.11</include>
+                                    <include>org.apache.flink:flink-connector-elasticsearch6_2.11</include>
+                                    <include>org.apache.flink:flink-streaming-jaka-0.10_2.11</include>
+                                    <include>org.apache.httpcomponents*</include>
+                                    <include>org.elasticsearch*</include>
                                 </includes>
                             </artifactSet>
                             <filters>
