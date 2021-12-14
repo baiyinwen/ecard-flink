@@ -34,6 +34,7 @@ public class KafkaConfigUtils {
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("auto.offset.reset", "earliest");
+        props.put("max.partition.fetch.bytes", "10485760");
 
         if (parameterTool.getBoolean(CONFIGS.KAFKA_SASL_ENABLE)) {
             props.put("security.protocol", "SASL_TBDS");
