@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Properties;
 
 /**
- * @Description 签发量统计（一键签发）
+ * @Description 签发量统计（一键签发）  ------停用
  * @Author WangXueDong
  * @Date 2020/10/13 9:24
  * @Version 1.0
