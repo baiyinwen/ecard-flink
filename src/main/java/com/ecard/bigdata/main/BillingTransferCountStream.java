@@ -53,7 +53,7 @@ public class BillingTransferCountStream {
      * @Author WangXueDong
      * @Date 2020/9/14 15:10
      **/
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {////
 
         logger.info("start " + ClassName);
         final ParameterTool parameterTool = ParameterUtils.createParameterTool();
