@@ -22,9 +22,12 @@ import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.util.Collector;
+import org.apache.flink.util.OutputTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +70,7 @@ public class BillingTransferCountStream {
 
         SingleOutputStreamOperator<JsonLogInfo> distinctRes = data.filter((FilterFunction<JsonLogInfo>) jsonLogInfo -> {
             if (null != jsonLogInfo) {
-                if (jsonLogInfo.getTime() == null || jsonLogInfo.getEvent() == null || jsonLogInfo.getChannelNo() == null) {
+                if (jsonLogInfo.getTime() == null || jsonLogInfo.getEvent() == null || (jsonLogInfo.getChannelNo()==null && jsonLogInfo.getAppKey()==null)) {
                     logger.info("JSON日志数据异常！" + jsonLogInfo.getOrigLog());
                     return false;
                 }
@@ -88,7 +91,11 @@ public class BillingTransferCountStream {
             BillingTransfer billingTransfer = new BillingTransfer();
             billingTransfer.setCollectTime(DateTimeUtils.toTimestamp(jsonLogInfo.getTime(), CONSTANTS.DATE_TIME_FORMAT_1));
             billingTransfer.setEvent(jsonLogInfo.getEvent());
-            billingTransfer.setChannelNo(jsonLogInfo.getChannelNo());
+            if (jsonLogInfo.getChannelNo() == null){
+                billingTransfer.setChannelNo(jsonLogInfo.getAppKey());
+            }else {
+                billingTransfer.setChannelNo(jsonLogInfo.getChannelNo());
+            }
             billingTransfer.setTransferTimes(CONSTANTS.NUMBER_1);
             return billingTransfer;
         }).returns(TypeInformation.of(new TypeHint<BillingTransfer>() {})).assignTimestampsAndWatermarks(new BillingTransferCountWatermark())
