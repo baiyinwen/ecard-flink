@@ -10,7 +10,7 @@
 
     <properties>
         <!--运行环境：本地-dev、测试-pre、生产-pro-->
-        <execute.env>pro</execute.env>
+        <execute.env>pre</execute.env>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.binary.version>2.11</scala.binary.version>
         <flink.version>1.7.0</flink.version>
@@ -64,17 +64,17 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.15.0</version>
+            <version>2.17.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.15.0</version>
+            <version>2.17.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.15.0</version>
+            <version>2.17.2</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -112,7 +112,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.11</version>
         </dependency>
-
 
     </dependencies>
 
@@ -213,7 +212,7 @@
                             </filters>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass></mainClass>
+                                    <mainClass>com.ecard.bigdata.main.JyFrontToTbase</mainClass>
                                 </transformer>
                             </transformers>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
