@@ -2,6 +2,7 @@ package com.ecard.bigdata.schemas;
 
 import com.ecard.bigdata.bean.JsonLogInfo;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -29,6 +30,9 @@ public class JsonLogSchema implements DeserializationSchema<JsonLogInfo>, Serial
         if (!origLog.isEmpty()) {
             try {
                 JsonLogInfo jsonLogInfo = gson.fromJson(origLog, JsonLogInfo.class);
+                if (jsonLogInfo.getInput() != null && jsonLogInfo.getInput().getString("appKey") != null) {
+                    jsonLogInfo.setAppKey(jsonLogInfo.getInput().getString("appKey"));
+                }
                 jsonLogInfo.setOrigLog(origLog);
                 return jsonLogInfo;
             } catch (Exception e) {

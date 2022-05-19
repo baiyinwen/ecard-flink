@@ -105,4 +105,10 @@ public class CONFIGS {
     public final static String PHOTO_RATIO_SIGN_ALARM_MAX_OUT_OF_ORDER = "photo.ratio.sign.alarm.max.out.of.order";
     public final static String PHOTO_RATIO_SIGN_ALARM_MAX_ALLOWED_LATENESS = "photo.ratio.sign.alarm.max.allowed.lateness";
 
+    /*电子社保卡登录日志数据同步到ES*/
+    public final static String ECARDAPP_KAFKA_TOPIC = "ecardapp.kafka.topic";
+    public final static String ECARDAPP_ES_HOSTS = "ecardapp.es.hosts";
+    public final static String ECARDAPP_LOGIN_LOG_EVENTS = "ecardapp.login.log.events";
+
+
 }
