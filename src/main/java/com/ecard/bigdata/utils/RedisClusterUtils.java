@@ -41,7 +41,7 @@ public class RedisClusterUtils {
     static {
         try {
             REDIS_HOSTS = ConfigUtils.getString(CONFIGS.REDIS_HOSTS).split(",");
-            REDIS_PASSWORD = ConfigUtils.getString(CONFIGS.REDIS_PASSWORD);
+            REDIS_PASSWORD = ConfigUtils.getString(CONFIGS.REDIS_PD);
 
             Set<HostAndPort> hostAndPortsSet = new HashSet<>();
             for (String redis_host : REDIS_HOSTS) {
@@ -62,7 +62,7 @@ public class RedisClusterUtils {
             }
             logger.info("redis: initialPool");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

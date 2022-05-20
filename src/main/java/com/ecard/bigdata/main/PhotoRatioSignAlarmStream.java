@@ -78,7 +78,8 @@ public class PhotoRatioSignAlarmStream {
                         outputJson = JSONObject.parseObject(outputStr);
                     } catch (Exception e) {
                         logger.error(jsonLogInfo.toString() + " --- 日志解析异常" + e.getMessage());
-                        e.printStackTrace();
+//                        e.printStackTrace();
+                        logger.warn("异常："+e);
                         return false;
                     }
                     if (outputJson != null) {

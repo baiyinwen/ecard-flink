@@ -1,5 +1,8 @@
 package com.ecard.bigdata.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,7 +15,7 @@ import java.util.Date;
  *@Date 2019/9/20 11:52
  **/
 public class DateTimeUtils {
-
+	private static Logger logger = LoggerFactory.getLogger(DateTimeUtils.class);
 	/**
 	 * @Description 获取自定义时间
 	 * @Param diff 距今相差天数：-1、0、1...
@@ -60,7 +63,7 @@ public class DateTimeUtils {
 			SimpleDateFormat sdf = new SimpleDateFormat(format);
 			return sdf.parse(dateTime);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return new Date();
 	}

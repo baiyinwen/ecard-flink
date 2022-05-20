@@ -64,7 +64,8 @@ public class RiskControlPaySaveSink extends RichSinkFunction<RiskControlPayLogIn
             hBaseUtils.flush();
         } catch (Exception e) {
             logger.error(riskControlPayLogInfo.toString());
-            e.printStackTrace();
+//            e.printStackTrace();
+            logger.warn("异常："+e);
         }
     }
 

@@ -59,7 +59,8 @@ public class RiskControlPayStream {
         try {
             env.execute(ClassName);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            logger.warn("异常："+e);
         }
 
     }
