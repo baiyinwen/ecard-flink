@@ -154,8 +154,11 @@ public class TBaseUtils {
                     }
                 }
             }
-            rtn = pst.executeUpdate();
-            conn.commit();
+            if (pst!=null){
+                rtn = pst.executeUpdate();
+                conn.commit();
+            }
+
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
@@ -196,8 +199,10 @@ public class TBaseUtils {
                     }
                 }
             }
-            rtn = pst.executeBatch();
-            conn.commit();
+            if (pst != null){
+                rtn = pst.executeBatch();
+                conn.commit();
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
