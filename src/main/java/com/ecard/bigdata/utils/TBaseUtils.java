@@ -72,11 +72,11 @@ public class TBaseUtils {
         Connection connection = null;
         try {
             connection = druidDataSource.getConnection();
-                if (null == connection) {
-//                Thread.sleep(30);
-                    connection.wait(30);
-                    connection = druidDataSource.getConnection();
-                }
+//                if (null == connection) {
+////                Thread.sleep(30);
+//                    connection.wait(30);
+//                    connection = druidDataSource.getConnection();
+//                }
         } catch (Exception exception) {
             logger.error(exception.getMessage());
         }
@@ -103,8 +103,7 @@ public class TBaseUtils {
             conn = getConnection();
             if (conn != null){
              pst = conn.prepareStatement(sql);
-            }
-            if(params != null && params.length > 0) {
+            if(params != null && params.length > 0 && pst !=null) {
                 if (paramsEnough(sql, params)){
                     for(int i = 0; i < params.length; i++) {
                         pst.setObject(i + 1, params[i]);
@@ -112,6 +111,7 @@ public class TBaseUtils {
                 }
             }
             rs = pst.executeQuery();
+            }
             callback.process(rs);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -146,7 +146,7 @@ public class TBaseUtils {
             if (conn != null){
                 conn.setAutoCommit(false);
                 pst = conn.prepareStatement(sql);
-                if(params != null && params.length > 0) {
+                if(params != null && params.length > 0 && pst != null) {
                     if (paramsEnough(sql, params)) {
                         for(int i = 0; i < params.length; i++) {
                             pst.setObject(i + 1, params[i]);
@@ -180,9 +180,11 @@ public class TBaseUtils {
         PreparedStatement pst = null;
         try {
             conn = getConnection();
-            conn.setAutoCommit(false);
-            pst = conn.prepareStatement(sql);
-            if(paramsList != null && paramsList.size() > 0) {
+            if (conn != null){
+                conn.setAutoCommit(false);
+                pst = conn.prepareStatement(sql);
+            }
+            if(paramsList != null && paramsList.size() > 0 && pst != null) {
                 for(Object[] params : paramsList) {
                     if(params != null && params.length > 0) {
                         if (paramsEnough(sql, params)) {
