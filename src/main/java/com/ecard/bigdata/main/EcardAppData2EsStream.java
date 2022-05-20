@@ -58,7 +58,7 @@ public class EcardAppData2EsStream {
         List<HttpHost> elsearchHosts = new ArrayList<>();
         for (int i =0;i<hostsArray.length;i++) {
             String ips = hostsArray[i];
-            elsearchHosts.add(new HttpHost(ips.split(":")[0].toString(), Integer.valueOf(ips.split(":")[1]), "http"));
+            elsearchHosts.add(new HttpHost(ips.split(":")[0].toString(), Integer.valueOf(ips.split(":")[1]), "https"));
         }
         String eventLoginLog = ConfigUtils.getString(CONFIGS.ECARDAPP_LOGIN_LOG_EVENTS);
         ObjectMapper mapper = new ObjectMapper(); // jaskson ObjectMapper

@@ -41,7 +41,7 @@ public class TBaseUtils {
 
             TBASE_JDBC_URL= ConfigUtils.getString(CONFIGS.TBASE_JDBC_URL);
             TBASE_JDBC_USER = ConfigUtils.getString(CONFIGS.TBASE_JDBC_USER);
-            TBASE_JDBC_PASSWORD = ConfigUtils.getString(CONFIGS.TBASE_JDBC_PASSWORD);
+            TBASE_JDBC_PASSWORD = ConfigUtils.getString(CONFIGS.TBASE_JDBC_PWD);
         } catch (ClassNotFoundException e) {
             logger.error(e.getMessage());
             e.printStackTrace();
@@ -81,7 +81,7 @@ public class TBaseUtils {
             logger.error(exception.getMessage());
             exception.printStackTrace();
         }
-        logger.info("get connection -- " + connection);
+//        logger.info("get connection -- " + connection);
         return connection;
     }
 

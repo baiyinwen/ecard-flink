@@ -18,11 +18,11 @@ public class CONFIGS {
     /*TBase参数*/
     public final static String TBASE_JDBC_URL = "tbase.jdbc.url";
     public final static String TBASE_JDBC_USER = "tbase.jdbc.user";
-    public final static String TBASE_JDBC_PASSWORD = "tbase.jdbc.password";
+    public final static String TBASE_JDBC_PWD = "tbase.jdbc.pwd";
 
     /*redis参数*/
     public final static String REDIS_HOSTS = "redis.hosts";
-    public final static String REDIS_PASSWORD = "redis.password";
+    public final static String REDIS_PASSWORD = "redis.pwd";
 
     /*open-falcon报警推送url*/
     public final static String OPEN_FALCON_PUSH_URL = "open.falcon.push.url";
