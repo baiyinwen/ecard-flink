@@ -1,5 +1,7 @@
 package com.ecard.bigdata.bean;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.Serializable;
 
 /**
@@ -8,13 +10,13 @@ import java.io.Serializable;
  * @Date 2019/9/19 15:28
  * @Version 1.0
  **/
-public class JsonLogInfo<I, O> implements Serializable {
-
+public class JsonLogInfo implements Serializable {
     private String channelNo;
+    private String appKey;
     private String costTime;
     private String event;
-    private I input;
-    private O output;
+    private JSONObject input;
+    private JSONObject output;
     private String time;
     private String type;
     private String version;
@@ -44,19 +46,19 @@ public class JsonLogInfo<I, O> implements Serializable {
         this.event = event;
     }
 
-    public I getInput() {
+    public JSONObject getInput() {
         return input;
     }
 
-    public void setInput(I input) {
+    public void setInput(JSONObject input) {
         this.input = input;
     }
 
-    public O getOutput() {
+    public JSONObject getOutput() {
         return output;
     }
 
-    public void setOutput(O output) {
+    public void setOutput(JSONObject output) {
         this.output = output;
     }
 
@@ -92,10 +94,19 @@ public class JsonLogInfo<I, O> implements Serializable {
         this.origLog = origLog;
     }
 
+    public String getAppKey() {
+        return appKey;
+    }
+
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
+    }
+
     @Override
     public String toString() {
-        return "JsonLog{" +
+        return "JsonLogInfo{" +
                 "channelNo='" + channelNo + '\'' +
+                ", appKey='" + appKey + '\'' +
                 ", costTime='" + costTime + '\'' +
                 ", event='" + event + '\'' +
                 ", input=" + input +
@@ -103,6 +114,7 @@ public class JsonLogInfo<I, O> implements Serializable {
                 ", time='" + time + '\'' +
                 ", type='" + type + '\'' +
                 ", version='" + version + '\'' +
+                ", origLog='" + origLog + '\'' +
                 '}';
     }
 }

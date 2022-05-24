@@ -41,10 +41,9 @@ public class TBaseUtils {
 
             TBASE_JDBC_URL= ConfigUtils.getString(CONFIGS.TBASE_JDBC_URL);
             TBASE_JDBC_USER = ConfigUtils.getString(CONFIGS.TBASE_JDBC_USER);
-            TBASE_JDBC_PASSWORD = ConfigUtils.getString(CONFIGS.TBASE_JDBC_PASSWORD);
+            TBASE_JDBC_PASSWORD = ConfigUtils.getString(CONFIGS.TBASE_JDBC_PD);
         } catch (ClassNotFoundException e) {
             logger.error(e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -73,15 +72,15 @@ public class TBaseUtils {
         Connection connection = null;
         try {
             connection = druidDataSource.getConnection();
-            while (null == connection) {
-                Thread.sleep(30);
-                connection = druidDataSource.getConnection();
-            }
+//                if (null == connection) {
+////                Thread.sleep(30);
+//                    connection.wait(30);
+//                    connection = druidDataSource.getConnection();
+//                }
         } catch (Exception exception) {
             logger.error(exception.getMessage());
-            exception.printStackTrace();
         }
-        logger.info("get connection -- " + connection);
+//        logger.info("get connection -- " + connection);
         return connection;
     }
 
@@ -93,7 +92,6 @@ public class TBaseUtils {
             }
         } catch (SQLException throwables) {
             logger.error(throwables.getMessage());
-            throwables.printStackTrace();
         }
     }
 
@@ -103,8 +101,9 @@ public class TBaseUtils {
         ResultSet rs = null;
         try {
             conn = getConnection();
-            pst = conn.prepareStatement(sql);
-            if(params != null && params.length > 0) {
+            if (conn != null){
+             pst = conn.prepareStatement(sql);
+            if(params != null && params.length > 0 && pst !=null) {
                 if (paramsEnough(sql, params)){
                     for(int i = 0; i < params.length; i++) {
                         pst.setObject(i + 1, params[i]);
@@ -112,23 +111,23 @@ public class TBaseUtils {
                 }
             }
             rs = pst.executeQuery();
+            }
             callback.process(rs);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            e.printStackTrace();
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
             if (pst != null) {
                 try {
                     pst.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
             if(conn != null) {
@@ -144,26 +143,30 @@ public class TBaseUtils {
         PreparedStatement pst = null;
         try {
             conn = getConnection();
-            conn.setAutoCommit(false);
-            pst = conn.prepareStatement(sql);
-            if(params != null && params.length > 0) {
-                if (paramsEnough(sql, params)) {
-                    for(int i = 0; i < params.length; i++) {
-                        pst.setObject(i + 1, params[i]);
+            if (conn != null){
+                conn.setAutoCommit(false);
+                pst = conn.prepareStatement(sql);
+                if(params != null && params.length > 0 && pst != null) {
+                    if (paramsEnough(sql, params)) {
+                        for(int i = 0; i < params.length; i++) {
+                            pst.setObject(i + 1, params[i]);
+                        }
                     }
                 }
             }
-            rtn = pst.executeUpdate();
-            conn.commit();
+            if (pst!=null){
+                rtn = pst.executeUpdate();
+                conn.commit();
+            }
+
         } catch (Exception e) {
             logger.error(e.getMessage());
-            e.printStackTrace();
         } finally {
             if (pst != null) {
                 try {
                     pst.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
             if(conn != null) {
@@ -180,9 +183,11 @@ public class TBaseUtils {
         PreparedStatement pst = null;
         try {
             conn = getConnection();
-            conn.setAutoCommit(false);
-            pst = conn.prepareStatement(sql);
-            if(paramsList != null && paramsList.size() > 0) {
+            if (conn != null){
+                conn.setAutoCommit(false);
+                pst = conn.prepareStatement(sql);
+            }
+            if(paramsList != null && paramsList.size() > 0 && pst != null) {
                 for(Object[] params : paramsList) {
                     if(params != null && params.length > 0) {
                         if (paramsEnough(sql, params)) {
@@ -194,17 +199,18 @@ public class TBaseUtils {
                     }
                 }
             }
-            rtn = pst.executeBatch();
-            conn.commit();
+            if (pst != null){
+                rtn = pst.executeBatch();
+                conn.commit();
+            }
         } catch (Exception e) {
             logger.error(e.getMessage());
-            e.printStackTrace();
         } finally {
             if (pst != null) {
                 try {
                     pst.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
             if(conn != null) {

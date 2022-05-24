@@ -5,6 +5,8 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.conf.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,8 +20,8 @@ import java.util.List;
 public class HBaseUtils {
 
     private static Configuration configuration;
-    private static final long WRITE_SIZE = 20 * 1024 * 1024;
-
+    private static final long WRITE_SIZE = 20 * 1024 * 1024L;
+    private static Logger logger = LoggerFactory.getLogger(HBaseUtils.class);
     private Connection connection = null;
     private BufferedMutator mutator;
 
@@ -42,7 +44,7 @@ public class HBaseUtils {
             params.writeBufferSize(WRITE_SIZE);
             mutator = connection.getBufferedMutator(params);
         } catch (IOException e) {
-            e.printStackTrace();
+           logger.error(e.getMessage());
         }
     }
 
@@ -50,7 +52,7 @@ public class HBaseUtils {
         try {
             mutator.mutate(list);
         } catch (IOException e) {
-            e.printStackTrace();
+           logger.error(e.getMessage());
         }
     }
 
@@ -58,7 +60,7 @@ public class HBaseUtils {
         try {
             mutator.mutate(put);
         } catch (IOException e) {
-            e.printStackTrace();
+           logger.error(e.getMessage());
         }
     }
 
@@ -66,7 +68,7 @@ public class HBaseUtils {
         try {
             mutator.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+           logger.error(e.getMessage());
         }
     }
 
@@ -79,7 +81,7 @@ public class HBaseUtils {
                 connection.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           logger.error(e.getMessage());
         }
     }
 

@@ -18,11 +18,11 @@ public class CONFIGS {
     /*TBase参数*/
     public final static String TBASE_JDBC_URL = "tbase.jdbc.url";
     public final static String TBASE_JDBC_USER = "tbase.jdbc.user";
-    public final static String TBASE_JDBC_PASSWORD = "tbase.jdbc.password";
+    public final static String TBASE_JDBC_PD = "tbase.jdbc.pwd";
 
     /*redis参数*/
     public final static String REDIS_HOSTS = "redis.hosts";
-    public final static String REDIS_PASSWORD = "redis.password";
+    public final static String REDIS_PD = "redis.pwd";
 
     /*open-falcon报警推送url*/
     public final static String OPEN_FALCON_PUSH_URL = "open.falcon.push.url";
@@ -104,5 +104,11 @@ public class CONFIGS {
     public final static String PHOTO_RATIO_SIGN_ALARM_TUMBLING_WINDOW_SIZE = "photo.ratio.sign.alarm.tumbling.window.size";
     public final static String PHOTO_RATIO_SIGN_ALARM_MAX_OUT_OF_ORDER = "photo.ratio.sign.alarm.max.out.of.order";
     public final static String PHOTO_RATIO_SIGN_ALARM_MAX_ALLOWED_LATENESS = "photo.ratio.sign.alarm.max.allowed.lateness";
+
+    /*电子社保卡登录日志数据同步到ES*/
+    public final static String ECARDAPP_KAFKA_TOPIC = "ecardapp.kafka.topic";
+    public final static String ECARDAPP_ES_HOSTS = "ecardapp.es.hosts";
+    public final static String ECARDAPP_LOGIN_LOG_EVENTS = "ecardapp.login.log.events";
+
 
 }

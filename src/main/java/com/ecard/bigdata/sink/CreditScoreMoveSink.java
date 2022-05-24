@@ -63,7 +63,8 @@ public class CreditScoreMoveSink extends RichSinkFunction<List<CreditScore>> {
             logger.info("save data to hbase");
         } catch (Exception e) {
             logger.error(list.toString());
-            e.printStackTrace();
+//            e.printStackTrace();
+            logger.warn("异常："+e);
         }
     }
 

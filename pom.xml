@@ -10,7 +10,7 @@
 
     <properties>
         <!--运行环境：本地-dev、测试-pre、生产-pro-->
-        <execute.env>pre</execute.env>
+        <execute.env>pro</execute.env>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.binary.version>2.11</scala.binary.version>
         <flink.version>1.7.0</flink.version>
@@ -113,6 +113,7 @@
             <version>3.11</version>
         </dependency>
 
+
     </dependencies>
 
     <repositories>
@@ -212,7 +213,7 @@
                             </filters>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.ecard.bigdata.main.JyFrontToTbase</mainClass>
+                                    <mainClass></mainClass>
                                 </transformer>
                             </transformers>
                             <createDependencyReducedPom>false</createDependencyReducedPom>

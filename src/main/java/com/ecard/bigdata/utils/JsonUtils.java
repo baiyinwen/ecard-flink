@@ -1,6 +1,8 @@
 package com.ecard.bigdata.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @Description
@@ -9,12 +11,12 @@ import com.alibaba.fastjson.JSONObject;
  * @Version 1.0
  **/
 public class JsonUtils {
-
+    private static Logger logger = LoggerFactory.getLogger(JsonUtils.class);
     public static boolean isJsonObject(String str){
         try {
             JSONObject.parseObject(str);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;
@@ -24,7 +26,7 @@ public class JsonUtils {
         try {
             JSONObject.isValidObject(str);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;

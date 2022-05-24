@@ -21,15 +21,33 @@ public class ConfigUtils {
     private static Properties prop = new Properties();
 
     static {
+        InputStream in1 = null;
+        InputStream in2 = null;
         try {
             //读取resources资源文件下配置文件
-            InputStream in1 = ConfigUtils.class.getClassLoader().getResourceAsStream(CONSTANTS.ECARD_FLINK_CONFIG_FILE);
-            InputStream in2 = ConfigUtils.class.getClassLoader().getResourceAsStream(CONSTANTS.APPLICATION_CONFIG_FILE);
+            in1 = ConfigUtils.class.getClassLoader().getResourceAsStream(CONSTANTS.ECARD_FLINK_CONFIG_FILE);
+            in2 = ConfigUtils.class.getClassLoader().getResourceAsStream(CONSTANTS.APPLICATION_CONFIG_FILE);
             prop.load(in1);
             prop.load(in2);
-            logger.info("load config.properties --- " + prop.toString());
+            logger.info("load config.properties --- " + LogForgingUtil.vaildLog(prop.toString()));
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            logger.error(e.getMessage());
+        }finally {
+            try {
+                if (in1 != null) {
+                    in1.close();
+                }
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
+            try {
+                if (in2 != null) {
+                    in2.close();
+                }
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
         }
     }
 
@@ -57,7 +75,7 @@ public class ConfigUtils {
         try {
             return Integer.valueOf(value);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return 0;
     }
@@ -68,7 +86,7 @@ public class ConfigUtils {
         try {
             return Long.valueOf(value);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return 0l;
     }
@@ -79,7 +97,7 @@ public class ConfigUtils {
         try {
             return Double.valueOf(value);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return 0d;
     }
@@ -90,7 +108,7 @@ public class ConfigUtils {
         try {
             return Boolean.valueOf(value);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return true;
     }
