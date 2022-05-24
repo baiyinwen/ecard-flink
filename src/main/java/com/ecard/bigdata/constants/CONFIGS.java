@@ -92,6 +92,11 @@ public class CONFIGS {
     public final static String INFO_VERIFICATION_COUNT_MAX_OUT_OF_ORDER = "info.verification.count.max.out.of.order";
     public final static String INFO_VERIFICATION_COUNT_MAX_ALLOWED_LATENESS = "info.verification.count.max.allowed.lateness";
 
+    /*商用调用次数统计*/
+    public final static String BUSINESS_COUNT_KAFKA_TOPIC = "business.count.kafka.topic";
+    public final static String BUSINESS_COUNT_TUMBLING_WINDOW_SIZE = "business.count.tumbling.window.size";
+    public final static String BUSINESS_COUNT_MAX_OUT_OF_ORDER = "business.count.max.out.of.order";
+    public final static String BUSINESS_COUNT_COUNT_MAX_ALLOWED_LATENESS = "business.count.count.max.allowed.lateness";
     /*展验码统计量*/
     public final static String QRCODE_ALARM_KAFKA_TOPIC = "qrcode.alarm.kafka.topic";
     public final static String QRCODE_ALARM_LOG_EVENTS = "qrcode.alarm.log.events";
@@ -104,7 +109,8 @@ public class CONFIGS {
     public final static String PHOTO_RATIO_SIGN_ALARM_TUMBLING_WINDOW_SIZE = "photo.ratio.sign.alarm.tumbling.window.size";
     public final static String PHOTO_RATIO_SIGN_ALARM_MAX_OUT_OF_ORDER = "photo.ratio.sign.alarm.max.out.of.order";
     public final static String PHOTO_RATIO_SIGN_ALARM_MAX_ALLOWED_LATENESS = "photo.ratio.sign.alarm.max.allowed.lateness";
-
+    /*就业前端数据入tbase*/
+    public final static String JY_FRONT_KAFKA_TOPIC = "jy.front.kafka.topic";
     /*电子社保卡登录日志数据同步到ES*/
     public final static String ECARDAPP_KAFKA_TOPIC = "ecardapp.kafka.topic";
     public final static String ECARDAPP_ES_HOSTS = "ecardapp.es.hosts";

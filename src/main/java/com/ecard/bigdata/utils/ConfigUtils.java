@@ -88,7 +88,7 @@ public class ConfigUtils {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        return 0l;
+        return 0L;
     }
 
     public static Double getDouble(String key) {
